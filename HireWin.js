@@ -62,9 +62,6 @@ export default class HireWindow {
     this.arrowUp = elem.querySelector( '.up_arrow' );
     this.arrowDown = elem.querySelector( '.down_arrow' );
     this.infoInner = elem.querySelector( '.info_inner' );
-    // this.descriptionAva = elem.querySelector( '.info_ava' );
-    // this.descriptionStart = elem.querySelector( '.info_start' );
-    // this.descriptionEnd = elem.querySelector( '.info_end' );
     this.getArrayUnits( this.configFirstPlayer.race );
     
 
