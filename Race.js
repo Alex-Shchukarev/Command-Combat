@@ -91,10 +91,10 @@ export default class SecondWin {
     this.nickSecondPlayer = this._elem.querySelector( '[name="second_player"]' );
     this.nickFirstPlayer.addEventListener( 'change', this.checkInputFirst );
     this.nickSecondPlayer.addEventListener( 'change', this.checkInputSecond );
-    this.nickFirstPlayer.addEventListener( 'mouseover', this.giveHint );
-    this.nickFirstPlayer.addEventListener( 'mouseout', this.hideHint );
-    this.nickSecondPlayer.addEventListener( 'mouseover', this.giveHint );
-    this.nickSecondPlayer.addEventListener( 'mouseout', this.hideHint );
+    this.nickFirstPlayer.addEventListener( 'pointerover', this.giveHint );
+    this.nickFirstPlayer.addEventListener( 'pointerout', this.hideHint );
+    this.nickSecondPlayer.addEventListener( 'pointerover', this.giveHint );
+    this.nickSecondPlayer.addEventListener( 'pointerout', this.hideHint );
     raceArrows.addEventListener( 'click', this.clicker );
     firstPlayerConfirm.addEventListener( 'click', this.player1confirm );
     secondPlayerConfirm.addEventListener( 'click', this.player2confirm ); 
