@@ -757,10 +757,15 @@ a:hover {
     padding: 0;
     margin-left: 60px;
     width: 73px;
-    height: 92px;
+    height: 88px;
     margin-bottom: 68px; 
     border: 1px solid #b3c9ce;
-    box-shadow: 0 0 11px white;
+    text-align: center;
+    padding-top: 4px;
+}
+
+.active_drop {
+    box-shadow: 0 0 17px white;
 }
 
 .slots_for_icons li:nth-child(2) {
@@ -841,7 +846,6 @@ a:hover {
     margin: 0;
     height: 150px;
     display: flex;
-    border: 1px solid yellow;
 }
 
 .info_inner li div {

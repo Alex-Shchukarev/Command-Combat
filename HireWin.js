@@ -32,7 +32,6 @@ export default class HireWindow {
                         </ul>
                     </div>
                     <div class="footer_slots">
-                        <a href="#" class="btn_op">Hire</a>
                     </div>
                 </div>
                 <div class="icon_units">
@@ -62,13 +61,16 @@ export default class HireWindow {
     this.arrowUp = elem.querySelector( '.up_arrow' );
     this.arrowDown = elem.querySelector( '.down_arrow' );
     this.infosInner = elem.querySelector( '.info_inner' );
+    this.slotsForIcon = elem.querySelector( '.slots_for_icons' ).querySelectorAll( 'li' );
+    this.footer = elem.querySelector( '.footer_slots' );
+    this.command = [];
     this.getArrayUnits( this.configFirstPlayer.race );
     
 
     // fill slider with slides 
     for( let unit of this.listUnits[this.raceUnits] ) {
 
-        let item = createElem( `<li data-id="${unit.id}"><img src="./img/${unit.portrait}"></li>` );
+        let item = createElem( `<li data-id="${unit.id}" class="choose"><img src="./img/${unit.portrait}"></li>` );
         item.classList.add( `active_ava_${this.configFirstPlayer.race}` )
         this.iconsSlider.append( item );
         item = createElem( `<li><div><p><img src="./img/${unit.portrait}"></p><p>${unit.name}</p></div>
@@ -89,12 +91,11 @@ export default class HireWindow {
     this.hireContent = this._elem.querySelector( '.recruiting' );
     this.iconSlider = this.iconsSlider.querySelectorAll( 'li' );
     this.infoInner = this.infosInner.querySelectorAll( 'li' );
-    console.log(this.iconSlider);
     this.hireContent.addEventListener( 'click', this.clicker );
     this.iconsSlider.ondragstart = function() {
         return false;
     };
-    this.iconsSlider.addEventListener( 'pointerdown', this.transference );
+    this.iconsSlider.addEventListener( 'pointerdown', this.onPointerDown );
 
     }
 
@@ -155,16 +156,23 @@ export default class HireWindow {
         
     }
 
-    transference = (event) => {
+    onPointerDown = (event) => {
 
         event.preventDefault();
         let target = event.target;
-        console.log(target)
-        //if( !this.iconSlider.contains( target ) ) return; разобраться с проверкой target=img, а сравниваем с массивом Li-шек
+        if( !target.closest( '.choose' ) ) return;
+        this.iconUnit = target.cloneNode();
+        this.idUnit = target.closest( '[data-id]' ).dataset.id;
+        this.iconUnit.style.position = 'absolute';
+        this.iconUnit.style.zIndex = 400;
+        this.iconUnit.style.left = event.pageX - this.iconUnit.offsetWidth / 10 + 'px';
+        this.iconUnit.style.top = event.pageY - this.iconUnit.offsetHeight / 10 + 'px';
+        document.body.append( this.iconUnit );
+        this.currentDroppable = null;
         
         //hang handlers on target 
-        target.addEventListener( 'pointermove', this.onPointerMove );
-        target.addEventListener( 'pointerup', this.onPointerUp );
+        document.addEventListener( 'pointermove', this.onPointerMove );
+        this.iconUnit.addEventListener( 'pointerup', this.onPointerUp );
 
     }
 
@@ -172,33 +180,30 @@ export default class HireWindow {
 
         event.preventDefault();
         let target = event.target;
-        const iconUnit = target.cloneNode();
-        moveAt(event.pageX, event.pageY);
+        
         // переносит мяч на координаты (pageX, pageY),
         // дополнительно учитывая изначальный сдвиг относительно указателя мыши
-        function moveAt(pageX, pageY) {
-            iconUnit.style.left = pageX - iconUnit.offsetWidth / 2 + 'px';
-            iconUnit.style.top = pageY - iconUnit.offsetHeight / 2 + 'px';
+        function moveElement( pageX, pageY ) {
+            target.style.left = pageX - target.offsetWidth / 2 + 'px';
+            target.style.top = pageY - target.offsetHeight / 2 + 'px';
         }
-        //
-        iconUnit.style.position = 'absolute';
-        iconUnit.style.zIndex = 300;
-        document.body.append( target );
+        moveElement( event.pageX, event.pageY );
         //let newPositionX = ( event.clientX - iconUnit.getBoundingClientRect().left ) / this.hireContent.offsetWidth;
         // курсор вышел из слайдера => оставить бегунок в его границах.
         //newLeft = (newLeft < 0) ? 0 : newLeft;
         //newLeft = (newLeft > 1) ? 1 : newLeft;
-        //moveAt(event.pageX, event.pageY);
-        iconUnit.hidden = true;
+        
+        target.hidden = true;
         let elemBelow = document.elementFromPoint(event.clientX, event.clientY);
-        iconUnit.hidden = false;
+        target.hidden = false;
         // событие mousemove может произойти и когда указатель за пределами окна
         // (мяч перетащили за пределы экрана)
         // если clientX/clientY за пределами окна, elementFromPoint вернёт null
         if (!elemBelow) return;
         // потенциальные цели переноса помечены классом droppable (может быть и другая логика)
         let droppableBelow = elemBelow.closest( '.droppable' );
-        if (currentDroppable != droppableBelow) {
+        
+        if ( this.currentDroppable != droppableBelow ) {
     // мы либо залетаем на цель, либо улетаем из неё
     // внимание: оба значения могут быть null
     //   currentDroppable=null,
@@ -206,16 +211,88 @@ export default class HireWindow {
     //   droppableBelow=null,
     //     если мы не над droppable именно сейчас, во время этого события
 
-        if (currentDroppable) {
+        if ( this.currentDroppable ) {
       // логика обработки процесса "вылета" из droppable (удаляем подсветку)
-            leaveDroppable(currentDroppable);
+            this.leaveDroppable( this.currentDroppable );
         }
-        currentDroppable = droppableBelow;
-        if (currentDroppable) {
+        this.currentDroppable = droppableBelow;
+        
+        if ( this.currentDroppable ) {
       // логика обработки процесса, когда мы "влетаем" в элемент droppable
-            enterDroppable(currentDroppable);
+            this.enterDroppable( this.currentDroppable );
         }
+
+    }
+    }
+
+    onPointerUp = ( event ) => {
+        let target = event.target;
+        if( this.currentDroppable === null ) {
+            target.remove();
+            document.removeEventListener( 'pointermove', this.onPointerMove );
+            this.iconUnit.removeEventListener( 'pointerup', this.onPointerUp );
+            this.iconUnit.remove();
         }
+        else if( this.currentDroppable.closest( '.droppable' ) ) {
+            target.removeAttribute( 'style' );
+            this.currentDroppable.insertAdjacentHTML( 'beforeend', `${target.outerHTML}` );
+            this.currentDroppable.classList.remove( 'droppable' );
+            this.currentDroppable.setAttribute( 'data-id', `${this.idUnit}` );
+            this.currentDroppable = null;
+            document.removeEventListener( 'pointermove', this.onPointerMove );
+            this.iconUnit.removeEventListener( 'pointerup', this.onPointerUp );
+            this.iconUnit.remove();
+            let rez = this.checkFill();
+            if( rez == 3 ) {
+                this.footer.insertAdjacentHTML( 'beforeend', '<a href="#" class="btn_op">Hire</a>' );
+                this.footer.querySelector( 'a' ).addEventListener( 'click', this.collectCommand );
+            }
+        } 
+        
+    }
+
+
+    leaveDroppable = ( elem ) => {
+
+        elem.classList.remove( 'active_drop' );
+
+    }
+
+    enterDroppable = ( elem ) => {
+
+        elem.classList.add( 'active_drop' );
+
+    }
+
+    checkFill = () => {
+        let count = 0;
+        for( let item of this.slotsForIcon ) {
+            if( item.innerHTML == '' ) count--;
+            else count++;
+        }
+        return count;
+    }
+
+    collectCommand = () => {
+
+        for( let item of this.slotsForIcon ) this.command.push( Number( item.dataset.id ) );
+
+        // save config the first player
+        const firstPlayerConfig = {
+
+            race: this.configFirstPlayer.race,
+            nickname: this.configFirstPlayer.nickname,
+            captain: this.configFirstPlayer.captain,
+            command: [...this.command]
+
+        };
+
+        let jsonconfig = JSON.stringify( firstPlayerConfig );
+        localStorage.setItem( 'configFirstPlayer', jsonconfig );
+
+        // load information about the second player
+        jsonconfig = localStorage.getItem( 'configSecondPlayer' );
+        this.configSecondPlayer = JSON.parse( jsonconfig );
 
     }
 
