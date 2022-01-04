@@ -934,6 +934,7 @@ a:hover {
 
 .field_main {
     display: flex;
+    background: url('./img/demons_field0.png') url('./img/demons_field1.png') url('./img/demons_field2.png') url('./img/demons_field3.png');
 }
 
 .listPlayer1, .listPlayer2 {
@@ -948,9 +949,14 @@ a:hover {
     margin: 0;
     padding: 0;
     margin-bottom: 5px;
+    padding: 5px;
     box-sizing: border-box;
     height: 125px;
-    border: 1px solid blue;
+    color: black;
+    background: url('./img/fone_for_unitList.png') no-repeat 50% 50%;
+    border-radius: 5px;
+    text-align: center;
+    display: flex;
 }
 
 .group_player1, .group_player2 {
@@ -976,7 +982,6 @@ a:hover {
     height: 175px;
     text-align: center;
     display: flex;
-    border: 1px solid yellow;
 }
 
 .player1_back li img, .player2_back li img, .player1_front li img, .player2_front li img {

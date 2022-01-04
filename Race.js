@@ -226,7 +226,8 @@ export default class SecondWin {
         modalPl2.classList.remove( 'disabled_pl2' );
         modalPl1.classList.add( 'disabled_pl1' );
         const activeRace = this._elem.querySelector( '.active_race' );
-        
+        if( this.nickFirstPlayer.value == '' ) this.nickFirstPlayer.value = 'Artur_1';
+
         const configFirstPlayer = {
             nickname: this.nickFirstPlayer.value,
             race: activeRace.dataset.id
@@ -239,6 +240,7 @@ export default class SecondWin {
     player2confirm = () => {
 
         const activeRace = this._elem.querySelector( '.active_race' );
+        if( this.nickSecondPlayer.value == '' ) this.nickSecondPlayer.value = 'Lancelot_5';
         const configSecondPlayer = {
             nickname: this.nickSecondPlayer.value,
             race: activeRace.dataset.id

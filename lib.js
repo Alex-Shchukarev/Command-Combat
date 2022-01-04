@@ -8,7 +8,7 @@ export function createElem( html ) {
 
 }
 
-export let races = [
+export const races = [
     { name: 'E M P I R E',
     image: 'race_empire_img.png',
     description: `The empire of humans is one of the most numerous races and one of the most controversial. People are building cities 
@@ -50,7 +50,7 @@ const empireListCaptain = [
     all the secrets of magic, the magician becomes an archmage. Archmages stands to protect the human empire from the dark forces.`,
     avatar: 'empire_archimag.png',
     id: '2',
-    characteristics: [ 'Empire', '140', '40', '0', '20', '20', '0' ] },
+    characteristics: [ 'Empire', '140', '40', '0', '15', '20', '0' ] },
 
     { name: 'Commander of the Royal Rangers',
     portrait: 'ava_empire_ranger.png',
@@ -79,7 +79,7 @@ const demonsListCaptain = [
     There she will be able to comprehend all the subtleties of demonic magic and draw strength from the fiery hyena.`,
     avatar: 'demons_countess.png',
     id: '2',
-    characteristics: [ 'Demons', '190', '40', '0', '20', '0', '0' ] },
+    characteristics: [ 'Demons', '190', '40', '0', '15', '0', '0' ] },
 
     { name: 'Lord of the Hordes of Wrath',
     portrait: 'ava_demons_lord.png',
@@ -87,7 +87,7 @@ const demonsListCaptain = [
     effectively used by the lord of the hordes of wrath. He pushes everyone against each other and always gets what he needs.`,
     avatar: 'demons_lord.png',
     id: '3',
-    characteristics: [ 'Demons', '220', '60', '30', '0', '0', '0' ] }
+    characteristics: [ 'Demons', '220', '60', '0', '30', '0', '0' ] }
 ];
 
 jsonconfig = JSON.stringify( demonsListCaptain );
@@ -108,7 +108,7 @@ const elfsListCaptain = [
     have learned to control all the forces of nature and use them to protect their people.`,
     avatar: 'elfs_keeper.png',
     id: '2',
-    characteristics: [ 'Elfs', '140', '50', '0', '20', '0', '0' ] },
+    characteristics: [ 'Elfs', '140', '50', '0', '15', '0', '0' ] },
 
     { name: 'Forest Ranger Commander',
     portrait: 'ava_elfs_ranger.png',
@@ -137,7 +137,7 @@ const deadsListCaptain = [
     left their bones exposed, and their magical abilities multiplied thanks to dark occult skill.`,
     avatar: 'deads_queen.png',
     id: '2',
-    characteristics: [ 'Empire', '140', '40', '0', '20', '0', '30' ] },
+    characteristics: [ 'Empire', '140', '40', '0', '15', '0', '30' ] },
 
     { name: 'The Supreme Vampire',
     portrait: 'ava_deads_vampire.png',
@@ -151,22 +151,43 @@ const deadsListCaptain = [
 jsonconfig = JSON.stringify( deadsListCaptain );
 localStorage.setItem( 'Deads', jsonconfig );
 
-export let unitsEmpire = {
-    Knight: [ 'Knight', 200, 50, 40, 0, 20, 0, 1, 'near' ],
-    Ranger: [ 'Ranger', 170, 60, 30, 0, 20, 0, 1, 'any'],
-    Archer: [ 'Archer', 135, 60, 0, 20, 20, 0, 1, 'any' ],
-    Archimag: [ 'Archimag', 140, 40, 0, 20, 20, 0, 6, 'any' ],
-    Mag: [ 'Mag', 105, 40, 0, 10, 20, 0, 6, 'any' ],
-    Swordsman: [ 'Swordsman', 170, 50, 25, 0, 20, 0, 1, 'near' ]
-};
+export const unitsList = [
+[ [ [ 'Captain of the Royal Cavalry', 200, 50, 40, 0, 20, 0, 1, 'near', 'empire_captain.png' ],
+        [ 'Archmage of the Empire', 140, 40, 0, 15, 20, 0, 6, 'any', 'empire_sorcerer.png' ],
+        [ 'Commander of the Royal Rangers', 170, 60, 30, 0, 20, 0, 1, 'any', 'empire_rangers.png' ] 
+    ],
 
-export let unitsDemons = [
-    [ 'Knight', 250, 50, 40, 0, 0, 0, 1, 'near' ],
-    [ 'Ranger', 220, 60, 30, 0, 0, 0, 1, 'any'],
-    [ 'Archer', 170, 60, 0, 20, 0, 0, 1, 'any' ],
-    [ 'Archimag', 190, 40, 0, 20, 0, 0, 6, 'any' ],
-    [ 'Mag', 140, 40, 0, 10, 0, 0, 6, 'any' ],
-    [ 'Swordsman', 200, 50, 25, 0, 0, 0, 1, 'near' ]
+    [ [ 'Knight', 170, 50, 25, 0, 20, 0, 1, 'near', 'empire_knight.png' ],
+        [ 'Witchunter', 140, 50, 25, 0, 0, 100, 1, 'near', 'empire_witchunter.png' ],
+        [ 'Archer', 135, 60, 0, 20, 20, 0, 1, 'any', 'empire_archer.png' ],
+        [ 'Mag', 105, 40, 0, 10, 20, 0, 6, 'any', 'empire_mag.png' ],
+        [ 'Priest', 105, 20, 0, 0, 20, 0, 1, 'any', 'empire_priest.png' ] 
+    ]
+],
+
+[ [ [ 'Duke of the Legion of Hate', 250, 50, 40, 0, 0, 0, 1, 'near', 'demons_dukes.png' ],
+        [ 'Countess of the Infernal Cult', 190, 40, 0, 15, 0, 0, 6, 'any', 'demons_countes.png' ],
+        [ 'Lord of the Hordes of Wrath', 220, 60, 0, 30, 0, 0, 1, 'any', 'demons_ranger.png' ] 
+    ],
+
+    [ [ 'Hall_warrior', 220, 50, 25, 0, 0, 0, 1, 'near', 'demons_hall_warrior.png' ],
+        [ 'Dark_knight', 170, 50, 25, 0, 0, 50, 1, 'near', 'demons_dark_knight.png' ],
+        [ 'Demonolog', 105, 40, 10, 0, 20, 0, 6, 'any', 'demons_demonolog.png' ],
+        [ 'Gargoyle', 170, 60, 20, 0, 0, 0, 1, 'any', 'demons_gargoyle.png' ],
+        [ 'Modeus', 135, 40, 0, 10, 0, 0, 6, 'any', 'demons_modeus.png' ] 
+    ]
+],
+
+[
+    [],
+    []
+],
+
+[
+    [],
+    []
+]
+
 ];
 
 export const listUnits = [
@@ -175,53 +196,53 @@ export const listUnits = [
     portrait: 'empire_knight.png',
     startlist: '<p><br>health - 170<br>iniciative - 50<br>damage - 25<br>armor - 20<br>targets - 1</p>',
     endlist: '<p><br>mag.damage - 0<br>mag.defense - 0<br>attack - near<br>capability - none</p>',
-    id: '0' },
+    id: 0 },
     { name: 'Witchunter',
     portrait: 'empire_witchunter.png',
     startlist: '<p><br>health - 140<br>iniciative - 50<br>damage - 25<br>armor - 0<br>targets - 1</p>',
     endlist: '<p><br>mag.damage - 0<br>mag.defense - 0<br>attack - near<br>capability - immunity to magic</p>',
-    id: '1' },
+    id: 1 },
     { name: 'Archer',
     portrait: 'empire_archer.png',
     startlist: '<p><br>health - 135<br>iniciative - 60<br>damage - 0<br>armor - 20<br>targets - 1</p>',
     endlist: '<p><br>mag.damage - 20<br>mag.defense - 0<br>attack - any<br>capability - none</p>',
-    id: '2' },
+    id: 2 },
     { name: 'Mag',
     portrait: 'empire_mag.png',
     startlist: '<p><br>health - 105<br>iniciative - 40<br>damage - 0<br>armor - 20<br>targets - 6</p>',
     endlist: '<p><br>mag.damage - 10<br>mag.defense - 0<br>attack - all<br>capability - none</p>',
-    id: '3' },
+    id: 3 },
     { name: 'Priest',
     portrait: 'empire_priest.png',
     startlist: '<p><br>health - 105<br>iniciative - 20<br>damage - 0<br>armor - 20<br>targets - 1</p>',
     endlist: '<p><br>mag.damage - 0<br>mag.defense - 0<br>attack - neither<br>capability - healing</p>',
-    id: '4' } ],
+    id: 4 } ],
 
     [ { name: 'Hall_warrior',
     portrait: 'demons_hall_warrior.png',
     startlist: '<p><br>health - 220<br>iniciative - 50<br>damage - 25<br>armor - 0<br>targets - 1</p>',
     endlist: '<p><br>mag.damage - 0<br>mag.defense - 0<br>attack - near<br>capability - none</p>',
-    id: '0' },
+    id: 0 },
     { name: 'Dark_knight',
     portrait: 'demons_dark_knight.png',
     startlist: '<p><br>health - 170<br>iniciative - 50<br>damage - 25<br>armor - 0<br>targets - 1</p>',
     endlist: '<p><br>mag.damage - 0<br>mag.defense - 50<br>attack - near<br>capability - none</p>',
-    id: '1' },
+    id: 1 },
     { name: 'Demonolog',
     portrait: 'demons_demonolog.png',
     startlist: '<p><br>health - 105<br>iniciative - 40<br>damage - 10<br>armor - 20<br>targets - 6</p>',
     endlist: '<p><br>mag.damage - 0<br>mag.defense - 0<br>attack - all<br>capability - none</p>',
-    id: '2' },
+    id: 2 },
     { name: 'Gargoyle',
     portrait: 'demons_gargoyle.png',
     startlist: '<p><br>health - 170<br>iniciative - 60<br>damage - 20<br>armor - 0<br>targets - 1</p>',
     endlist: '<p><br>mag.damage - 0<br>mag.defense - 0<br>attack - any<br>capability - none</p>',
-    id: '3' },
+    id: 3 },
     { name: 'Modeus',
     portrait: 'demons_modeus.png',
-    startlist: '<p><br>health - 140<br>iniciative - 40<br>damage - 0<br>armor - 0<br>targets - 6</p>',
+    startlist: '<p><br>health - 135<br>iniciative - 40<br>damage - 0<br>armor - 0<br>targets - 6</p>',
     endlist: '<p><br>mag.damage - 10<br>mag.defense - 0<br>attack - all<br>capability - none</p>',
-    id: '4' } ]
+    id: 4 } ]
 
 ];
 

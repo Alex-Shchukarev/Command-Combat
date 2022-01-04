@@ -1,5 +1,6 @@
 "use strict";
 
+import CombatWin from './CombatWin.js';
 import { createElem, listUnits } from './lib.js';
 
 export default class HireWindow {
@@ -31,8 +32,7 @@ export default class HireWindow {
                             <li class="droppable"></li>
                         </ul>
                     </div>
-                    <div class="footer_slots">
-                    </div>
+                    <div class="footer_slots"></div>
                 </div>
                 <div class="icon_units">
                     <div class="up_arrow">
@@ -46,13 +46,13 @@ export default class HireWindow {
                     </div>
                 </div>
                 <div class="info_units">
-                    <ul class="info_inner">
-                    </ul>
+                    <ul class="info_inner"></ul>
                 </div>
             </div>
         </div>
     </div>` );
 
+    // fill information about units for the first player
     this.foneSlotUnits = elem.querySelector( '.slot_units' );
     this.foneSlotUnits.classList.add( `fone_slots_${this.configFirstPlayer.race}` );
     this.foneInfoUnits = elem.querySelector( '.info_units' );
@@ -64,6 +64,7 @@ export default class HireWindow {
     this.slotsForIcon = elem.querySelector( '.slots_for_icons' ).querySelectorAll( 'li' );
     this.footer = elem.querySelector( '.footer_slots' );
     this.command = [];
+    this.counter = 0;
     this.getArrayUnits( this.configFirstPlayer.race );
     
 
@@ -79,7 +80,7 @@ export default class HireWindow {
 
     }
     
-    // start settings
+    // start settings for slider
     this.position = 1;
     this.arrowUp.style.display = 'none';
 
@@ -99,9 +100,9 @@ export default class HireWindow {
 
     }
 
+    // compare race of configPlayer and units
     getArrayUnits( race ) {
         
-        //this.raceUnits;
         if( race == 'Empire' ) this.raceUnits = 0;
         else if( race == 'Demons' ) this.raceUnits = 1;
         else if( race == 'Elfs' ) this.raceUnits = 2;
@@ -181,52 +182,46 @@ export default class HireWindow {
         event.preventDefault();
         let target = event.target;
         
-        // переносит мяч на координаты (pageX, pageY),
-        // дополнительно учитывая изначальный сдвиг относительно указателя мыши
+        // get coords of cursor and set them for target(clone)
         function moveElement( pageX, pageY ) {
             target.style.left = pageX - target.offsetWidth / 2 + 'px';
             target.style.top = pageY - target.offsetHeight / 2 + 'px';
         }
         moveElement( event.pageX, event.pageY );
-        //let newPositionX = ( event.clientX - iconUnit.getBoundingClientRect().left ) / this.hireContent.offsetWidth;
-        // курсор вышел из слайдера => оставить бегунок в его границах.
-        //newLeft = (newLeft < 0) ? 0 : newLeft;
-        //newLeft = (newLeft > 1) ? 1 : newLeft;
         
+        // constantly check over which element cursor is located
         target.hidden = true;
-        let elemBelow = document.elementFromPoint(event.clientX, event.clientY);
+        let elemBelow = document.elementFromPoint( event.clientX, event.clientY );
         target.hidden = false;
-        // событие mousemove может произойти и когда указатель за пределами окна
-        // (мяч перетащили за пределы экрана)
-        // если clientX/clientY за пределами окна, elementFromPoint вернёт null
+        
+        // if clientX/clientY out from window, elementFromPoint return null
         if (!elemBelow) return;
-        // потенциальные цели переноса помечены классом droppable (может быть и другая логика)
+
+        // check - potential targets markered (class "droppable")
         let droppableBelow = elemBelow.closest( '.droppable' );
         
         if ( this.currentDroppable != droppableBelow ) {
-    // мы либо залетаем на цель, либо улетаем из неё
-    // внимание: оба значения могут быть null
-    //   currentDroppable=null,
-    //     если мы были не над droppable до этого события (например, над пустым пространством)
-    //   droppableBelow=null,
-    //     если мы не над droppable именно сейчас, во время этого события
 
-        if ( this.currentDroppable ) {
-      // логика обработки процесса "вылета" из droppable (удаляем подсветку)
-            this.leaveDroppable( this.currentDroppable );
-        }
-        this.currentDroppable = droppableBelow;
+            // leave potential target
+            if ( this.currentDroppable ) {
+                this.leaveDroppable( this.currentDroppable );
+            }
+
+            this.currentDroppable = droppableBelow;
         
-        if ( this.currentDroppable ) {
-      // логика обработки процесса, когда мы "влетаем" в элемент droppable
-            this.enterDroppable( this.currentDroppable );
+            // come over potential target
+            if ( this.currentDroppable ) {
+                this.enterDroppable( this.currentDroppable );
+            }
+
         }
 
-    }
     }
 
     onPointerUp = ( event ) => {
         let target = event.target;
+
+        // clone leave out of potential target
         if( this.currentDroppable === null ) {
             target.remove();
             document.removeEventListener( 'pointermove', this.onPointerMove );
@@ -237,7 +232,7 @@ export default class HireWindow {
             target.removeAttribute( 'style' );
             this.currentDroppable.insertAdjacentHTML( 'beforeend', `${target.outerHTML}` );
             this.currentDroppable.classList.remove( 'droppable' );
-            this.currentDroppable.setAttribute( 'data-id', `${this.idUnit}` );
+            this.currentDroppable.setAttribute( 'data-id', this.idUnit );
             this.currentDroppable = null;
             document.removeEventListener( 'pointermove', this.onPointerMove );
             this.iconUnit.removeEventListener( 'pointerup', this.onPointerUp );
@@ -245,12 +240,12 @@ export default class HireWindow {
             let rez = this.checkFill();
             if( rez == 3 ) {
                 this.footer.insertAdjacentHTML( 'beforeend', '<a href="#" class="btn_op">Hire</a>' );
+                this.counter += 1;
                 this.footer.querySelector( 'a' ).addEventListener( 'click', this.collectCommand );
             }
         } 
         
     }
-
 
     leaveDroppable = ( elem ) => {
 
@@ -265,34 +260,99 @@ export default class HireWindow {
     }
 
     checkFill = () => {
+
         let count = 0;
+
         for( let item of this.slotsForIcon ) {
+
             if( item.innerHTML == '' ) count--;
             else count++;
+
         }
+
         return count;
+
     }
 
     collectCommand = () => {
 
-        for( let item of this.slotsForIcon ) this.command.push( Number( item.dataset.id ) );
+        if( this.counter == 1 ) {
 
-        // save config the first player
-        const firstPlayerConfig = {
+            for( let item of this.slotsForIcon ) this.command.push( Number( item.dataset.id ) );
 
-            race: this.configFirstPlayer.race,
-            nickname: this.configFirstPlayer.nickname,
-            captain: this.configFirstPlayer.captain,
-            command: [...this.command]
+            // save config the first player
+            const firstPlayerConfig = {
 
-        };
+                race: this.configFirstPlayer.race,
+                nickname: this.configFirstPlayer.nickname,
+                captain: this.configFirstPlayer.captain,
+                command: [...this.command]
 
-        let jsonconfig = JSON.stringify( firstPlayerConfig );
-        localStorage.setItem( 'configFirstPlayer', jsonconfig );
+            };
 
-        // load information about the second player
-        jsonconfig = localStorage.getItem( 'configSecondPlayer' );
-        this.configSecondPlayer = JSON.parse( jsonconfig );
+            let jsonconfig = JSON.stringify( firstPlayerConfig );
+            localStorage.setItem( 'configFirstPlayer', jsonconfig );
+
+            // load information about the second player and fill information about units for the second player
+            jsonconfig = localStorage.getItem( 'configSecondPlayer' );
+            this.configSecondPlayer = JSON.parse( jsonconfig );
+            this.foneSlotUnits.classList.remove( `fone_slots_${this.configFirstPlayer.race}` );
+            this.foneSlotUnits.classList.add( `fone_slots_${this.configSecondPlayer.race}` );
+            this.foneInfoUnits.classList.remove( `fone_info_${this.configFirstPlayer.race}` );
+            this.foneInfoUnits.classList.add( `fone_info_${this.configSecondPlayer.race}` );
+            this.command = [];
+            this.getArrayUnits( this.configSecondPlayer.race );
+            this.iconsSlider.innerHTML = '';
+            this.infosInner.innerHTML = '';
+            this.footer.innerHTML = '';
+            this.slotsForIcon = this._elem.querySelector( '.slots_for_icons' );
+            this.slotsForIcon.innerHTML = '';
+            for( let i = 0; i < 3; i++ ) {
+
+                let item = createElem( `<li class="droppable"></li>` );
+                this.slotsForIcon.append( item );
+
+            }
+            this.slotsForIcon = this.slotsForIcon.querySelectorAll( 'li' );
+
+            for( let unit of this.listUnits[this.raceUnits] ) {
+
+                let item = createElem( `<li data-id="${unit.id}" class="choose"><img src="./img/${unit.portrait}"></li>` );
+                item.classList.add( `active_ava_${this.configSecondPlayer.race}` )
+                this.iconsSlider.append( item );
+                item = createElem( `<li><div><p><img src="./img/${unit.portrait}"></p><p>${unit.name}</p></div>
+                    <div>${unit.startlist}</div><div>${unit.endlist}</div></li>` );
+                this.infosInner.append( item );
+        
+            }
+            this.iconSlider = this.iconsSlider.querySelectorAll( 'li' );
+            this.infoInner = this.infosInner.querySelectorAll( 'li' );
+            
+            // start settings for second player
+            this.position = 1;
+            this.arrowUp.style.display = 'none';
+
+        } else if( this.counter == 2 ) { 
+
+            for( let item of this.slotsForIcon ) this.command.push( Number( item.dataset.id ) );
+
+            // save config the first player
+            const secondPlayerConfig = {
+
+                race: this.configSecondPlayer.race,
+                nickname: this.configSecondPlayer.nickname,
+                captain: this.configSecondPlayer.captain,
+                command: [...this.command]
+
+            };
+
+            let jsonconfig = JSON.stringify( secondPlayerConfig );
+            localStorage.setItem( 'configSecondPlayer', jsonconfig );
+
+            this.mainContainer.innerHTML = '';
+            const combatPlayers = new CombatWin();
+
+        }
 
     }
 
