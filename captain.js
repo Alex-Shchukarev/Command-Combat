@@ -1,6 +1,6 @@
 "use strict";
 
-import { createElem } from './lib.js';
+import { createElem, soundsMenu } from './lib.js';
 import HireWindow from './HireWin.js';
 
 export default class CaptainsWindow {
@@ -136,34 +136,38 @@ export default class CaptainsWindow {
     chooseCaptain = ( event ) => {
         
         const target = event.target;
-        let indeks;
         
-        if( target.closest( '[data-id="1"]' ) ) indeks = 0;
-        else if( target.closest( '[data-id="2"]' ) ) indeks = 1;
-        else if( target.closest( '[data-id="3"]' ) ) indeks = 2;
+        if( target.closest( '[data-id="0"]' ) ) this.captainId = 0;
+        else if( target.closest( '[data-id="1"]' ) ) this.captainId = 1;
+        else if( target.closest( '[data-id="2"]' ) ) this.captainId = 2;
 
         for( let ava of this.listCaptain ) ava.classList.remove( this.thumb );
-        this.listCaptain[indeks].classList.add( this.thumb );
-        this.nameCaptain.innerHTML = this.listCaptainsPlayer[indeks].name;
-        this.portraitCaptain.innerHTML = `<img src="./img/${this.listCaptainsPlayer[indeks].portrait}">`;
+        this.listCaptain[this.captainId].classList.add( this.thumb );
+        this.nameCaptain.innerHTML = this.listCaptainsPlayer[this.captainId].name;
+        this.portraitCaptain.innerHTML = `<img src="./img/${this.listCaptainsPlayer[this.captainId].portrait}">`;
         for( let i = 0; i < this.listCharacteristics.length; i++ ) {
 
-            this.listCharacteristics[i].innerHTML = this.listCaptainsPlayer[indeks].characteristics[i];
+            this.listCharacteristics[i].innerHTML = this.listCaptainsPlayer[this.captainId].characteristics[i];
             
         }
         
-        this.captainDescription.innerHTML = this.listCaptainsPlayer[indeks].description;
+        this.captainDescription.innerHTML = this.listCaptainsPlayer[this.captainId].description;
 
     }
 
     player1Captain = () => {
+
+        // paste sound for button
+        const audio = new Audio();
+        audio.src = `${soundsMenu.buttonClickStart}`; 
+        audio.autoplay = true;
 
         // save config the first player
         const firstPlayerConfig = {
 
             race: this.configFirstPlayer.race,
             nickname: this.configFirstPlayer.nickname,
-            captain: this.nameCaptain.innerHTML
+            captain: this.captainId
 
         };
 
@@ -222,12 +226,17 @@ export default class CaptainsWindow {
 
     player2Captain = () => {
 
+        // paste sound for button
+        const audio = new Audio();
+        audio.src = `${soundsMenu.buttonClickStart}`; 
+        audio.autoplay = true;
+
         // save config the second player
         const secondPlayerConfig = {
 
             race: this.configSecondPlayer.race,
             nickname: this.configSecondPlayer.nickname,
-            captain: this.nameCaptain.innerHTML
+            captain: this.captainId
 
         };
 

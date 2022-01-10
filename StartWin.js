@@ -1,7 +1,7 @@
 "use strict";
 
 import Race from './Race.js';
-import { createElem } from './lib.js';
+import { createElem, soundsMenu } from './lib.js';
 
 export default class StartWindow {
 
@@ -45,15 +45,29 @@ export default class StartWindow {
 
     start = () => {
 
+        const audio = new Audio(); // create new audio element
+        audio.src = `${soundsMenu.buttonClickStart}`; 
+        audio.autoplay = true;
+
         const mainContainer = document.querySelector( '.main_container' );
-        mainContainer.innerHTML = '';
-        const rasa = new Race();
+        
+        setTimeout( () => {
+            mainContainer.innerHTML = '';
+            const rasa = new Race();
+        }, 600 ); 
 
     }
 
     close = () => {
 
-        document.body.innerHTML = '';
+        const audio = new Audio(); // create new audio element
+        audio.src = `${soundsMenu.buttonClickEnd}`; 
+        audio.autoplay = true;
+
+        setTimeout( () => {
+            document.body.innerHTML = '';
+        }, 600 );
+        
 
     }
 

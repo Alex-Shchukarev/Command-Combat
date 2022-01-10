@@ -1,7 +1,7 @@
 "use strict";
 
 import CaptainsWindow from './captain.js';
-import { createElem, races } from './lib.js';
+import { createElem, races, soundsMenu } from './lib.js';
 
 
 export default class SecondWin {
@@ -220,6 +220,11 @@ export default class SecondWin {
 
     player1confirm = () => {
 
+        // paste sound for button
+        const audio = new Audio();
+        audio.src = `${soundsMenu.buttonClickStart}`; 
+        audio.autoplay = true;
+        
         // switcher of modal window between players 
         const modalPl1 = this._elem.querySelector( '.modal_pl1' );
         const modalPl2 = this._elem.querySelector( '.modal_pl2' );
@@ -238,6 +243,11 @@ export default class SecondWin {
     }
 
     player2confirm = () => {
+
+         // paste sound for button
+        const audio = new Audio();
+        audio.src = `${soundsMenu.buttonClickStart}`; 
+        audio.autoplay = true; 
 
         const activeRace = this._elem.querySelector( '.active_race' );
         if( this.nickSecondPlayer.value == '' ) this.nickSecondPlayer.value = 'Lancelot_5';

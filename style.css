@@ -934,7 +934,22 @@ a:hover {
 
 .field_main {
     display: flex;
-    background: url('./img/demons_field0.png') url('./img/demons_field1.png') url('./img/demons_field2.png') url('./img/demons_field3.png');
+}
+
+.Empire_field {
+    background: url('./img/empire_field.png');
+}
+
+.Demons_field {
+    background: url('./img/demons_field.png');
+}
+
+.Elfs_field {
+    background: url('./img/elfs_field.png');
+}
+
+.Deads_field {
+    background: url('./img/deads_field.png');
 }
 
 .listPlayer1, .listPlayer2 {
@@ -953,10 +968,14 @@ a:hover {
     box-sizing: border-box;
     height: 125px;
     color: black;
+    text-align: center;
     background: url('./img/fone_for_unitList.png') no-repeat 50% 50%;
     border-radius: 5px;
-    text-align: center;
     display: flex;
+}
+
+.listPlayer1 li div, .listPlayer2 li div {
+    width: 140px;
 }
 
 .group_player1, .group_player2 {
@@ -988,4 +1007,32 @@ a:hover {
     margin: 0;
     padding: 0;
     margin: auto;
+}
+
+.loading {
+    height: 669px;
+    width: 964px;
+    z-index: 500;
+    background: url('./img/race_modal_pl2.jpg');
+    filter: grayscale(0.7);
+    opacity: 0.6;
+    margin-bottom: 30px;
+}
+
+.active_unit {
+    filter: drop-shadow(0 0 5px white);
+}
+
+.active_target {
+    filter: drop-shadow(0 0 5px magenta);
+}
+
+.finish_window {
+    height: 669px;
+    width: 964px;
+    z-index: 500;
+    background: url('./img/race_modal_pl1.jpeg');
+    filter: grayscale(0.7);
+    opacity: 0.6;
+    margin-bottom: 30px;
 }

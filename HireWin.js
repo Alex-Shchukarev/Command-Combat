@@ -1,7 +1,7 @@
 "use strict";
 
 import CombatWin from './CombatWin.js';
-import { createElem, listUnits } from './lib.js';
+import { createElem, listUnits, soundsMenu } from './lib.js';
 
 export default class HireWindow {
 
@@ -101,7 +101,7 @@ export default class HireWindow {
     }
 
     // compare race of configPlayer and units
-    getArrayUnits( race ) {
+    getArrayUnits = ( race ) => {
         
         if( race == 'Empire' ) this.raceUnits = 0;
         else if( race == 'Demons' ) this.raceUnits = 1;
@@ -219,6 +219,7 @@ export default class HireWindow {
     }
 
     onPointerUp = ( event ) => {
+        
         let target = event.target;
 
         // clone leave out of potential target
@@ -275,6 +276,11 @@ export default class HireWindow {
     }
 
     collectCommand = () => {
+
+        // paste sound for button
+        const audio = new Audio();
+        audio.src = `${soundsMenu.buttonClickStart}`; 
+        audio.autoplay = true;
 
         if( this.counter == 1 ) {
 
