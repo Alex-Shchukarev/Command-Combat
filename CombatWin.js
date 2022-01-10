@@ -147,7 +147,7 @@ export default class CombatWin {
 
         this.modalWindow = this._elem.querySelector( '.modal' );
         this.modalWindow.classList.add( 'loading' );
-        const buttonFight = createElem( `<a href="#" class="btn_op">Confirm</a>` );
+        const buttonFight = createElem( `<a href="#" class="btn_op">Start Fight</a>` );
         this.modalWindow.append( buttonFight );
         buttonFight.addEventListener( 'click', this.startFight );
 
@@ -271,13 +271,23 @@ export default class CombatWin {
 
     startFight = () => {
 
+        // paste sound for button
+        const audio = new Audio();
+        audio.src = `${soundsMenu.buttonClickStart}`; 
+        audio.autoplay = true;
+
         this.modalWindow.classList.remove( 'loading' );
         this.modalWindow.remove();
-        setTimeout( this.doAction(), 3000 );
+        setTimeout( () => this.doAction(), 1500 );
 
     }
 
     clickButton = ( event ) => {
+
+        // paste sound for button
+        const audio = new Audio();
+        audio.src = `${soundsMenu.buttonClickStart}`; 
+        audio.autoplay = true;
 
         const target = event.target;
         if( target.closest( '.button_defend' ) ) {
@@ -434,7 +444,7 @@ export default class CombatWin {
                         this.listPlayer2.querySelector( `[data-id="${obj.id}"]` ).innerHTML = '';
                         this.listPlayer2.querySelector( `[data-id="${obj.id}"]` ).append( createElem( `<div><img src="./img/deadicon.png"></div>` ) );
                         } } );
-                        
+
                         this._elem.querySelector( `[data-id="${unit.position}"]` ).innerHTML = '';
                         this._elem.querySelector( `[data-id="${unit.position}"]` ).removeAttribute( `${unit.position}` );
                     
