@@ -1,98 +1,31 @@
 "use strict";
 
-import { createElem, soundsMenu } from './lib.js';
-import HireWindow from './HireWin.js';
+import { createElem, contentArray, soundsMenu, soundsCaptains, getConfigArray } from './lib.js';
+import { ModalWin } from './Modal.js';
 
 export default class CaptainsWindow {
 
     constructor() {
 
-        // load information about the first player
+        // загружаем данные о первом игроке из LocalStorage
         let jsonconfig = localStorage.getItem( 'configFirstPlayer' );
         this.configFirstPlayer = JSON.parse( jsonconfig );
 
-        const elem = createElem( `<div class="big_container">
-        <div class="container">
-            <div class="captain header">
-                <div class="captain_header title">
-                    <div class="name_marker phrase">Captain Menu</div>
-                </div>
-                <div class="captain_header logo">
-                    <div class="promo">
-                        <div class="name_game">Command Combat</div>
-                        <div class="emblem"></div>
-                    </div>
-                </div>
-                <div class="captain_header column"></div>
-            </div>
-            <div class="captain content">
-                <div class="captain_content players_list">
-                    <div class="captain_content_list firstplayer_list">
-                        <div class="modal_pl1"></div>
-                        <div class="player1_list_content">
-                            <ul>
-                                <li class="phrase">Player 1</li>
-                                <li class="phrase"></li>
-                                <li class="phrase"></li>
-                            </ul>
-                            <div class="button_list_fp">
-                                <a href="#" class="btn_op">OK</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="captain_content_list secondplayer_list">
-                        <div class="modal_pl2 disabled_player2_list"></div>
-                        <div class="player2_list_content">
-                            <ul>
-                                <li class="phrase">Player 2</li>
-                                <li class="phrase"></li>
-                                <li class="phrase"></li>
-                            </ul>
-                            <div class="button_list_sp">
-                                <a href="#" class="btn_op">OK</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="captain_content captain_inform">
-                    <div class="captain_info name_inform">
-                        <p></p>
-                    </div>
-                    <div class="captain_info avatar_inform">
-                        <div class="ava_captain"></div>
-                        <ul class="name_characteristics">
-                            <li>Race</li>
-                            <li>Health</li>
-                            <li>Initiative</li>
-                            <li>Damage</li>
-                            <li>Magical damage</li>
-                            <li>Armor</li>
-                            <li>Magical defense</li>
-                        </ul>
-                        <ul class="value_characteristics"></ul>
-                    </div>
-                    <div class="captain_info description_inform">
-                        <p></p>
-                    </div>
-                </div>
-                <div class="captain_content captain_list">
-                    <ul></ul>
-                </div>
-            </div>
-            <div class="captain footer"></div>
-        </div>
-        </div>` );
+        //вставляем верстку
+        const elem = createElem( `${contentArray.captainWin}` );
 
-        // fill information about first player
+        // отображаем nickname и расу первого игрока
         this.listFirstPlayer = elem.querySelector( '.player1_list_content' );
         const ulFirstPlayer = this.listFirstPlayer.querySelectorAll( 'li' );
         ulFirstPlayer[1].innerHTML = this.configFirstPlayer.nickname;
         ulFirstPlayer[2].innerHTML = this.configFirstPlayer.race;
+        this.currentRace = this.configFirstPlayer.race;
 
-        // fill information about captains of first player race
+        // получаем из LocalStorage лист капитанов расы первого игрока
         jsonconfig = localStorage.getItem( `${this.configFirstPlayer.race}` );
         this.listCaptainsPlayer = JSON.parse( jsonconfig );
         
+        // отображаем аватарки капитанов
         this.listCaptains = elem.querySelector( '.captain_list ul' );
         for( let item of this.listCaptainsPlayer ) {
 
@@ -101,9 +34,10 @@ export default class CaptainsWindow {
 
         }
 
-        // activate lightness
+        // активируем подстветку
         this.setLightness( this.configFirstPlayer.race );
 
+        // заполняем информацию по первому капитану из списка
         this.listCaptain = this.listCaptains.querySelectorAll( 'li' );
         this.nameCaptain = elem.querySelector( '.name_inform p' );
         this.nameCaptain.innerHTML = this.listCaptainsPlayer[0].name;
@@ -117,14 +51,17 @@ export default class CaptainsWindow {
 
         }
         this.listCharacteristics = this.listCharacteristics.querySelectorAll( 'li' );
+        // выводим описание для первого капитана
         this.captainDescription = elem.querySelector( '.description_inform p' );
         this.captainDescription.innerHTML = this.listCaptainsPlayer[0].description;
+        this.captainId = 0;
 
+        // вставляем контент в главный контейнер
         this.mainContainer = document.querySelector( '.main_container' );
         this.mainContainer.append( elem );
         this._elem = elem;
         
-        // hang handlers on the elements
+        // вешаем обработчики на элементы
         this.listCaptains.addEventListener( 'click', this.chooseCaptain );
         this.firstPlayerButton = this._elem.querySelector( '.button_list_fp' );
         this.secondPlayerButton = this._elem.querySelector( '.button_list_sp' );
@@ -133,13 +70,30 @@ export default class CaptainsWindow {
 
     }
 
+    // переключатель для отображения информации капитана
     chooseCaptain = ( event ) => {
         
         const target = event.target;
+        let race = getConfigArray( this.currentRace );
+        // вставляем звук для клика по иконке
+        const audio = new Audio();
+        audio.src = `${soundsMenu.captainChoose}`;
+        const voiceCaptain = new Audio();
+        voiceCaptain.autoplay = true;
         
-        if( target.closest( '[data-id="0"]' ) ) this.captainId = 0;
-        else if( target.closest( '[data-id="1"]' ) ) this.captainId = 1;
-        else if( target.closest( '[data-id="2"]' ) ) this.captainId = 2;
+        if( target.closest( '[data-id="0"] img' ) ) { 
+            this.captainId = 0;
+            voiceCaptain.src = `${soundsCaptains[race][0]}`;
+            audio.autoplay = true;
+        } else if( target.closest( '[data-id="1"] img' ) ) {
+            this.captainId = 1;
+            voiceCaptain.src = `${soundsCaptains[race][1]}`;
+            audio.autoplay = true;
+        } else if( target.closest( '[data-id="2"] img' ) ) {
+            this.captainId = 2;
+            voiceCaptain.src = `${soundsCaptains[race][2]}`;
+            audio.autoplay = true;
+        } else return;
 
         for( let ava of this.listCaptain ) ava.classList.remove( this.thumb );
         this.listCaptain[this.captainId].classList.add( this.thumb );
@@ -155,14 +109,15 @@ export default class CaptainsWindow {
 
     }
 
+    // первый игрок подтверждает выбор капитана
     player1Captain = () => {
 
-        // paste sound for button
+        // вставляем звук для кнопки
         const audio = new Audio();
         audio.src = `${soundsMenu.buttonClickStart}`; 
         audio.autoplay = true;
 
-        // save config the first player
+        // сохраняем конфигурацию для первого игрока
         const firstPlayerConfig = {
 
             race: this.configFirstPlayer.race,
@@ -170,15 +125,14 @@ export default class CaptainsWindow {
             captain: this.captainId
 
         };
-
         let jsonconfig = JSON.stringify( firstPlayerConfig );
         localStorage.setItem( 'configFirstPlayer', jsonconfig );
 
-        // load information about the second player
+        // загружаем данные о втором игроке из LocalStorage
         jsonconfig = localStorage.getItem( 'configSecondPlayer' );
         this.configSecondPlayer = JSON.parse( jsonconfig );
 
-        // change window players
+        // скрываем информацию о первом игроке и выводим о втором
         const modalPl1 = this._elem.querySelector( '.modal_pl1' );
         modalPl1.classList.add( 'disabled_player1_list' );
         this.listFirstPlayer.style.display = 'none';
@@ -187,12 +141,13 @@ export default class CaptainsWindow {
         const player2list = this._elem.querySelector( '.modal_pl2' );
         player2list.classList.remove( 'disabled_player2_list' );
 
-        // fill information about second player
+        // отображаем nickname и расу второго игрока
         const ulSecondPlayer = this.listSecondPlayer.querySelectorAll( 'li' );
         ulSecondPlayer[1].innerHTML = this.configSecondPlayer.nickname;
         ulSecondPlayer[2].innerHTML = this.configSecondPlayer.race;
+        this.currentRace = this.configSecondPlayer.race;
         
-        // fill information about captains of second player race
+        // получаем из LocalStorage лист капитанов расы второго игрока
         jsonconfig = localStorage.getItem( `${this.configSecondPlayer.race}` );
         this.listCaptainsPlayer = JSON.parse( jsonconfig );
         this.listCaptains = this._elem.querySelector( '.captain_list ul' );
@@ -204,9 +159,10 @@ export default class CaptainsWindow {
 
         }
         
-        // activate lightness
+        // активируем подсветку первому капитану
         this.setLightness( this.configSecondPlayer.race );
 
+        // заполняем информацию по первому капитану из списка
         this.listCaptain = this.listCaptains.querySelectorAll( 'li' );
         this.nameCaptain.innerHTML = this.listCaptainsPlayer[0].name;
         this.portraitCaptain.innerHTML = `<img src="./img/${this.listCaptainsPlayer[0].portrait}">`;
@@ -219,19 +175,21 @@ export default class CaptainsWindow {
 
         }
 
+        // выводим описание для первого капитана
         this.listCharacteristics = this.listCharacteristics.querySelectorAll( 'li' );
         this.captainDescription.innerHTML = this.listCaptainsPlayer[0].description;
+        this.captainId = 0;
 
     }
 
     player2Captain = () => {
 
-        // paste sound for button
+        // вставляем звук для кнопки
         const audio = new Audio();
         audio.src = `${soundsMenu.buttonClickStart}`; 
         audio.autoplay = true;
 
-        // save config the second player
+        // сохраняем конфигурацию для второго игрока
         const secondPlayerConfig = {
 
             race: this.configSecondPlayer.race,
@@ -243,11 +201,13 @@ export default class CaptainsWindow {
         let jsonconfig = JSON.stringify( secondPlayerConfig );
         localStorage.setItem( 'configSecondPlayer', jsonconfig );
 
+        // переходим к следующему окну - найм юнитов
         this.mainContainer.innerHTML = '';
-        const hireUnits = new HireWindow();
+        const modalHireUnits = new ModalWin();
 
     }
 
+    // выбор цвета подсветки согласно расе игрока
     setLightness( race ) {
         
         this.listCaptains.firstChild.classList.add( `active_ava_${race}` );

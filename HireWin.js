@@ -1,62 +1,27 @@
 "use strict";
 
-import CombatWin from './CombatWin.js';
-import { createElem, listUnits, soundsMenu } from './lib.js';
+import { ModalWin2 } from './Modal2.js';
+import { createElem, contentArray, listUnits, soundsMenu, musicHireWindow } from './lib.js';
 
 export default class HireWindow {
 
     constructor() {
 
-        // load information about the first player
+        // загружаем конфигурацию первого игрока
         let jsonconfig = localStorage.getItem( 'configFirstPlayer' );
         this.configFirstPlayer = JSON.parse( jsonconfig );
 
         this.listUnits = listUnits;
-        const elem = createElem( `<div class="big_container">
-        <div class="container">
-            <div class="hire_content header">
-                <div class="hire_nameColumn">
-                    <div class="phrase">Hire units</div>
-                </div>
-                <div class="hire_nameGame">
-                    <div class="name_game">Command Combat</div>
-                    <div class="emblem"></div>
-                </div>
-            </div>
-            <div class="hire_content recruiting">
-                <div class="slot_units">
-                    <div class="list_slots">
-                        <ul class="slots_for_icons">
-                            <li class="droppable"></li>
-                            <li class="droppable"></li>
-                            <li class="droppable"></li>
-                        </ul>
-                    </div>
-                    <div class="footer_slots"></div>
-                </div>
-                <div class="icon_units">
-                    <div class="up_arrow">
-                        <img src="./img/arrow_up.png" alt="icon_arrow_up">
-                    </div>
-                    <div class="icons_inner">
-                        <ul class="slides_icons"></ul>
-                    </div>
-                    <div class="down_arrow">
-                        <img src="./img/arrow_down.png" alt="icon_arrow_down">
-                    </div>
-                </div>
-                <div class="info_units">
-                    <ul class="info_inner"></ul>
-                </div>
-            </div>
-        </div>
-    </div>` );
+        //вставляем верстку
+        const elem = createElem( `${contentArray.hireWin}` );
 
-    // fill information about units for the first player
+    // загружаем подложки для первого игрока
     this.foneSlotUnits = elem.querySelector( '.slot_units' );
     this.foneSlotUnits.classList.add( `fone_slots_${this.configFirstPlayer.race}` );
     this.foneInfoUnits = elem.querySelector( '.info_units' );
     this.foneInfoUnits.classList.add( `fone_info_${this.configFirstPlayer.race}` );
+
+    // находим стрелки и слайдеры
     this.iconsSlider = elem.querySelector( '.slides_icons' );
     this.arrowUp = elem.querySelector( '.up_arrow' );
     this.arrowDown = elem.querySelector( '.down_arrow' );
@@ -65,42 +30,47 @@ export default class HireWindow {
     this.footer = elem.querySelector( '.footer_slots' );
     this.command = [];
     this.counter = 0;
-    this.getArrayUnits( this.configFirstPlayer.race );
-    
 
-    // fill slider with slides 
+    // получаем расу первого игрока для загрузки массива юнитов и музыки
+    this.getArrayUnits( this.configFirstPlayer.race );
+    const audio = new Audio();
+    audio.src = `${musicHireWindow[this.raceUnits]}`; 
+    audio.autoplay = true;
+
+    // заполняем слайдеры слайдами 
     for( let unit of this.listUnits[this.raceUnits] ) {
 
         let item = createElem( `<li data-id="${unit.id}" class="choose"><img src="./img/${unit.portrait}"></li>` );
         item.classList.add( `active_ava_${this.configFirstPlayer.race}` )
         this.iconsSlider.append( item );
-        item = createElem( `<li><div><p><img src="./img/${unit.portrait}"></p><p>${unit.name}</p></div>
+        item = createElem( `<li><div><br><br><br><p>${unit.name}</p></div>
             <div>${unit.startlist}</div><div>${unit.endlist}</div></li>` );
         this.infosInner.append( item );
 
     }
     
-    // start settings for slider
+    // устанавливаем стартовые настройки для слайдеров
     this.position = 1;
     this.arrowUp.style.display = 'none';
 
+    // добавляем весь контент в главный контейнер
     this.mainContainer = document.querySelector( '.main_container' );
     this.mainContainer.append( elem );
     this._elem = elem;
 
-    // hang handlers on elements
+    this.modalHint = this._elem.querySelector( '.modal_hint' );
+
+    // вешаем обработчики на элементы
     this.hireContent = this._elem.querySelector( '.recruiting' );
     this.iconSlider = this.iconsSlider.querySelectorAll( 'li' );
     this.infoInner = this.infosInner.querySelectorAll( 'li' );
     this.hireContent.addEventListener( 'click', this.clicker );
-    this.iconsSlider.ondragstart = function() {
-        return false;
-    };
+    this.iconsSlider.ondragstart = function() { return false; }; // отключаем браузерный механизм drag and drop
     this.iconsSlider.addEventListener( 'pointerdown', this.onPointerDown );
 
     }
 
-    // compare race of configPlayer and units
+    // сопоставляем расу игрока и юнитов
     getArrayUnits = ( race ) => {
         
         if( race == 'Empire' ) this.raceUnits = 0;
@@ -110,16 +80,20 @@ export default class HireWindow {
 
     }
 
-    // arrows switch method
+    // стрелочный переключатель слайдов в слайдере
     clicker = ( event ) => {
 
         let target = event.target;
 
-        // get sizes of containers for description and icons
+        // получаем размеры контейнеров для описаний и иконок
         const stepYicons = 135;
-        const stepYinfo = 150;
+        const stepYinfo = 135;
             
         if( target.closest( '.down_arrow' ) ) {
+            // вставляем звук для стрелки
+            const audio = new Audio();
+            audio.src = `${soundsMenu.arrowClick}`; 
+            audio.autoplay = true;
             for( let item of this.infoInner ) {
                 item.style.transform = `translateY(-${stepYinfo*this.position}px)`;
             }
@@ -130,6 +104,10 @@ export default class HireWindow {
         }
             
         if( target.closest( '.up_arrow' ) ) {
+            // вставляем звук для стрелки
+            const audio = new Audio();
+            audio.src = `${soundsMenu.arrowClick}`; 
+            audio.autoplay = true;
             for( let item of this.infoInner ) {
                 item.style.transform = `translateY(-${stepYinfo*(this.position-2)}px)`;
             }
@@ -139,6 +117,7 @@ export default class HireWindow {
             this.position -= 1;
         }
         
+        // уставливаем отображение стрелок в зависимости от слайда
         switch ( this.position ) {
             case 1:
             this.arrowUp.style.display = 'none';
@@ -159,19 +138,22 @@ export default class HireWindow {
 
     onPointerDown = (event) => {
 
+        // отменяем действие браузера по умолчанию
         event.preventDefault();
         let target = event.target;
-        if( !target.closest( '.choose' ) ) return;
-        this.iconUnit = target.cloneNode();
+        if( !target.closest( '.choose' ) ) return; // проверка на соответствие содержимого и нужных узлов
+        this.iconUnit = target.cloneNode(); // клонируем узел
         this.idUnit = target.closest( '[data-id]' ).dataset.id;
+        // устанавливаем позиционирование чтобы клон "парил" над документом
         this.iconUnit.style.position = 'absolute';
         this.iconUnit.style.zIndex = 400;
+        // немного смещаем клон чтобы было видно что он захвачен
         this.iconUnit.style.left = event.pageX - this.iconUnit.offsetWidth / 10 + 'px';
         this.iconUnit.style.top = event.pageY - this.iconUnit.offsetHeight / 10 + 'px';
         document.body.append( this.iconUnit );
-        this.currentDroppable = null;
+        this.currentDroppable = null; // устанавливаем потенциальную цель переноса над которой находимся сейчас 
         
-        //hang handlers on target 
+        //вешаем обработчики - на документ, чтобы цель не логала и на клон 
         document.addEventListener( 'pointermove', this.onPointerMove );
         this.iconUnit.addEventListener( 'pointerup', this.onPointerUp );
 
@@ -182,34 +164,34 @@ export default class HireWindow {
         event.preventDefault();
         let target = event.target;
         
-        // get coords of cursor and set them for target(clone)
+        // получаем координаты курсора и устанавливаем их для цели(клона)
         function moveElement( pageX, pageY ) {
             target.style.left = pageX - target.offsetWidth / 2 + 'px';
             target.style.top = pageY - target.offsetHeight / 2 + 'px';
         }
         moveElement( event.pageX, event.pageY );
         
-        // constantly check over which element cursor is located
+        // постоянно проверяем над каким элементом сейчас находится курсор
         target.hidden = true;
         let elemBelow = document.elementFromPoint( event.clientX, event.clientY );
         target.hidden = false;
         
-        // if clientX/clientY out from window, elementFromPoint return null
+        // если clientX/clientY за пределами окна, elementFromPoint return null
         if (!elemBelow) return;
 
-        // check - potential targets markered (class "droppable")
+        // проверяем потенциальная цель имеет класс "droppable"
         let droppableBelow = elemBelow.closest( '.droppable' );
         
         if ( this.currentDroppable != droppableBelow ) {
 
-            // leave potential target
+            // покидаем потенциальную цель
             if ( this.currentDroppable ) {
                 this.leaveDroppable( this.currentDroppable );
             }
 
             this.currentDroppable = droppableBelow;
         
-            // come over potential target
+            // заходим на потенциальную цель
             if ( this.currentDroppable ) {
                 this.enterDroppable( this.currentDroppable );
             }
@@ -222,7 +204,7 @@ export default class HireWindow {
         
         let target = event.target;
 
-        // clone leave out of potential target
+        // если клон покинул потенциальную цель, то удаляем все(клон, обработчики итд.)
         if( this.currentDroppable === null ) {
             target.remove();
             document.removeEventListener( 'pointermove', this.onPointerMove );
@@ -230,17 +212,26 @@ export default class HireWindow {
             this.iconUnit.remove();
         }
         else if( this.currentDroppable.closest( '.droppable' ) ) {
-            target.removeAttribute( 'style' );
-            this.currentDroppable.insertAdjacentHTML( 'beforeend', `${target.outerHTML}` );
+            // вставляем звук установки иконки
+            const audio = new Audio();
+            audio.src = `${soundsMenu.hireSetUnit}`; 
+            audio.autoplay = true;
+
+            target.removeAttribute( 'style' ); // удаляем позиционирование у цели
+            this.currentDroppable.insertAdjacentHTML( 'beforeend', `${target.outerHTML}` ); 
             this.currentDroppable.classList.remove( 'droppable' );
             this.currentDroppable.setAttribute( 'data-id', this.idUnit );
+            
             this.currentDroppable = null;
             document.removeEventListener( 'pointermove', this.onPointerMove );
             this.iconUnit.removeEventListener( 'pointerup', this.onPointerUp );
             this.iconUnit.remove();
+
+            // проверяем все ли окна для найма заполнены
             let rez = this.checkFill();
-            if( rez == 3 ) {
-                this.footer.insertAdjacentHTML( 'beforeend', '<a href="#" class="btn_op">Hire</a>' );
+
+            if( rez == 3 ) { // отображаем кнопку найма
+                this.footer.insertAdjacentHTML( 'beforeend', '<a href="#" class="btn_op">НАНЯТЬ</a>' );
                 this.counter += 1;
                 this.footer.querySelector( 'a' ).addEventListener( 'click', this.collectCommand );
             }
@@ -248,18 +239,21 @@ export default class HireWindow {
         
     }
 
+    // при покидании слота для найма убираем подсветку
     leaveDroppable = ( elem ) => {
 
         elem.classList.remove( 'active_drop' );
 
     }
 
+    // при заходе на слот найма подсвечиваем его
     enterDroppable = ( elem ) => {
 
         elem.classList.add( 'active_drop' );
 
     }
 
+    // проверка запонения слотов для найма
     checkFill = () => {
 
         let count = 0;
@@ -275,18 +269,20 @@ export default class HireWindow {
 
     }
 
+    // собираем конфигурацию команды для каждого игрока
     collectCommand = () => {
 
-        // paste sound for button
+        // добавляем звук нажатия кнопки найма
         const audio = new Audio();
         audio.src = `${soundsMenu.buttonClickStart}`; 
         audio.autoplay = true;
 
+        // проверяем кокому игроку нужно собрать конфигурацию
         if( this.counter == 1 ) {
 
             for( let item of this.slotsForIcon ) this.command.push( Number( item.dataset.id ) );
 
-            // save config the first player
+            // сохраняем конфигурацию для первого игрока
             const firstPlayerConfig = {
 
                 race: this.configFirstPlayer.race,
@@ -296,18 +292,28 @@ export default class HireWindow {
 
             };
 
+            // добавляем конфигурацию первого игрока в LocalStorage
             let jsonconfig = JSON.stringify( firstPlayerConfig );
             localStorage.setItem( 'configFirstPlayer', jsonconfig );
 
-            // load information about the second player and fill information about units for the second player
+            // загружаем данные о втором игроке
             jsonconfig = localStorage.getItem( 'configSecondPlayer' );
             this.configSecondPlayer = JSON.parse( jsonconfig );
+
+            // загружаем подложки для второго игрока
             this.foneSlotUnits.classList.remove( `fone_slots_${this.configFirstPlayer.race}` );
             this.foneSlotUnits.classList.add( `fone_slots_${this.configSecondPlayer.race}` );
             this.foneInfoUnits.classList.remove( `fone_info_${this.configFirstPlayer.race}` );
             this.foneInfoUnits.classList.add( `fone_info_${this.configSecondPlayer.race}` );
             this.command = [];
+
+            // получаем расу второго игрока для загрузки массива юнитов и музыки
             this.getArrayUnits( this.configSecondPlayer.race );
+            const music = new Audio();
+            music.src = `${musicHireWindow[this.raceUnits]}`; 
+            music.autoplay = true;
+
+            // очистка компонент после первого игрока и потом заполняем их данными о юнитах второго игрока
             this.iconsSlider.innerHTML = '';
             this.infosInner.innerHTML = '';
             this.footer.innerHTML = '';
@@ -326,7 +332,7 @@ export default class HireWindow {
                 let item = createElem( `<li data-id="${unit.id}" class="choose"><img src="./img/${unit.portrait}"></li>` );
                 item.classList.add( `active_ava_${this.configSecondPlayer.race}` )
                 this.iconsSlider.append( item );
-                item = createElem( `<li><div><p><img src="./img/${unit.portrait}"></p><p>${unit.name}</p></div>
+                item = createElem( `<li><div><br><br><br><p>${unit.name}</p></div>
                     <div>${unit.startlist}</div><div>${unit.endlist}</div></li>` );
                 this.infosInner.append( item );
         
@@ -334,7 +340,7 @@ export default class HireWindow {
             this.iconSlider = this.iconsSlider.querySelectorAll( 'li' );
             this.infoInner = this.infosInner.querySelectorAll( 'li' );
             
-            // start settings for second player
+            // устанавливаем стартовые настроки слайдеров
             this.position = 1;
             this.arrowUp.style.display = 'none';
 
@@ -342,7 +348,7 @@ export default class HireWindow {
 
             for( let item of this.slotsForIcon ) this.command.push( Number( item.dataset.id ) );
 
-            // save config the first player
+            // сохраняем конфигурацию для второго игрока
             const secondPlayerConfig = {
 
                 race: this.configSecondPlayer.race,
@@ -355,8 +361,9 @@ export default class HireWindow {
             let jsonconfig = JSON.stringify( secondPlayerConfig );
             localStorage.setItem( 'configSecondPlayer', jsonconfig );
 
+            // очищаем главный контейнер и переходим к следующему окну
             this.mainContainer.innerHTML = '';
-            const combatPlayers = new CombatWin();
+            const combatPlayers = new ModalWin2();
 
         }
 

@@ -137,6 +137,8 @@ a:hover {
     display: inline-block;
     margin: 0 90px;
     padding: 5px;
+    font-size: 18px;
+    font-weight: 600;
 }
 
 .pro_img {
@@ -149,7 +151,6 @@ a:hover {
     margin-right: 25px;
     filter: drop-shadow(0 0 3px rgb(209, 209, 209));
     border-radius: 15%;
-    font-size: 20px;
 }
 
 .menu {
@@ -450,7 +451,8 @@ a:hover {
     display: block;
     position: absolute;
     top: 40px;
-    left: 45px;
+    left: 20px;
+    width: 200px;
 }
 
 .logo {
@@ -682,6 +684,66 @@ a:hover {
     margin-top: 5px;
 }
 
+/* Styles for Modal Window */
+
+.modal_window{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    border: 1px solid grey;
+    width: 964px;
+    height: 669px;
+    background: url('./img/fone_modal.png') no-repeat 50% 50%;
+    position: relative;
+}
+
+.close_icon {
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+
+.modal_header {
+    margin: 0 auto;
+    padding: 0;
+    box-sizing: border-box;
+    width: 964px;
+    height: 169px;
+}
+
+.modal_header p {
+    margin-left: 47px;
+    color: black;
+    font-size: 18px;
+}
+
+.header_modal {
+    font-size: 22px;
+    font-weight: 500;
+    color: rgb(235, 235, 94);
+    text-align: center;
+    filter: drop-shadow(0 0 2px rgb(54, 24, 24));
+    font-family: 'Kingthings Petrock';
+    margin-top: 10px;
+}
+
+.modal_main {
+    margin: 0 auto;
+    margin-top: -10px;
+    padding: 0;
+    box-sizing: border-box;
+    width: 964px;
+    height: 500px;
+    background: url('./img/Hint_hire.png') no-repeat 7px 0;
+    position: relative;
+}
+
+.button_close {
+    position: absolute;
+    bottom: 50px;
+    left: 407px; 
+}
+
 /* Styles for Hire Window */
 
 .hire_content {
@@ -833,8 +895,8 @@ a:hover {
 .info_inner {
     list-style: none;
     width: 500px;
-    height: 450px;
-    margin: 65px auto;
+    height: 405px;
+    margin: 90px auto;
     overflow: hidden;
     background: url('./img/captain_info.png') no-repeat 50% 50%;
     border-radius: 15px;
@@ -844,21 +906,22 @@ a:hover {
     box-sizing: border-box;
     padding: 0;
     margin: 0;
-    height: 150px;
+    height: 135px;
     display: flex;
 }
 
 .info_inner li div {
     box-sizing: border-box;
-    margin: 0;
+    margin: auto;
     padding: 0;
     text-align: center;
-    vertical-align: middle;
     width: 165px;
-    height: 150px;
+    height: 135px;
 }
 
 .info_inner li p {
+    padding: 0;
+    margin: auto;
     color: black;
 } 
 
@@ -893,9 +956,60 @@ a:hover {
     height: 50px;
 }
 
-/* Styles for Combat Window */
+/* Styles for Modal2 Window */
 
-.combat_content {
+.modal_header {
+    margin: 0 auto;
+    padding: 0;
+    box-sizing: border-box;
+    width: 964px;
+    height: 169px;
+}
+
+.modal_head p {
+    margin: 0 45px;
+    color: black;
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.modal_head p:first-child {
+    margin-top: 5px;
+}
+
+.modal_main_set {
+    margin: 0 auto;
+    margin-top: 20px;
+    padding: 0;
+    box-sizing: border-box;
+    width: 964px;
+    height: 500px;
+    position: relative;
+    display: flex;
+}
+
+.first_hint_set, .second_hint_set {
+    margin: auto;
+    padding: 0;
+    box-sizing: border-box;
+    width: 482px;
+    height: 500px;
+    background: url('./img/Hint_set_1.png') no-repeat 50% 50%;
+}
+
+.second_hint_set {
+    background: url('./img/Hint_set_2.png') no-repeat 50% 50%;
+}
+
+.but_close {
+    position: absolute;
+    bottom: 0px;
+    left: 417px; 
+}
+
+/* Styles for SetUnit Window */
+
+.setunit_content {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -915,7 +1029,6 @@ a:hover {
 .footer {
     height: 50px;
     display: flex;
-    justify-content: center;
 }
 
 .header_player1, .header_player2, .field_listPlayer1, .field_listPlayer2 {
@@ -925,14 +1038,18 @@ a:hover {
     width: 182px;
 }
 
-.header_nameGame, .field_main {
+.header_nameGame {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
     width: 600px;
 }
 
-.field_main {
+.set_units1, .set_units2 {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    width: 482px;
     display: flex;
 }
 
@@ -983,6 +1100,7 @@ a:hover {
     padding: 0;
     width: 300px;
     display: flex;
+    position: relative;
 }
 
 .player1_back, .player2_back, .player1_front, .player2_front {
@@ -995,10 +1113,11 @@ a:hover {
 }
 
 .player1_back li, .player2_back li, .player1_front li, .player2_front li {
-    margin: 0;
+    margin: 25px;
     padding: 0;
     box-sizing: border-box;
-    height: 175px;
+    height: 125px;
+    border: 2px solid white;
     text-align: center;
     display: flex;
 }
@@ -1009,10 +1128,176 @@ a:hover {
     margin: auto;
 }
 
+.disabledwin1 {
+    margin: 0;
+    padding: 0;
+    background: url('./img/modal_set_1.jpg') no-repeat 50% 50%;
+    filter: opacity(0.7);
+}
+
+.disabledwin2 {
+    margin: 0;
+    padding: 0;
+    background: url('./img/modal_set_2.jpg') no-repeat 50% 50%;
+    filter: opacity(0.7);
+}
+
+.droppable_active {
+    box-shadow: 0 0 15px white inset;
+}
+
+.field_button_left, .field_button_right {
+    margin: 0;
+    padding: 0;
+    width: 482px;
+    box-sizing: border-box;
+}
+
+.center_plase {
+    margin: auto;
+    margin-top: 10px;
+}
+
+/* Styles for Combat Window */
+
+.combat_content {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    width: 964px;
+}
+
+.header_combat {
+    height: 60px;
+    display: flex;
+}
+
+.combat {
+    height: 609px;
+}
+
+.Empire_combat_field {
+    background: url('./img/empire_combat.png') no-repeat 50% 0;
+}
+
+.Demons_combat_field {
+    background: url('./img/demons_combat.png') no-repeat 50% 0;
+}
+
+.Elfs_combat_field {
+    background: url('./img/elfs_combat.png') no-repeat 50% 0;
+}
+
+.Deads_combat_field {
+    background: url('./img/deads_combat.png') no-repeat 50% 0;
+}
+
+.fieldn {
+    height: 550px;
+    display: flex;
+}
+
+.footer_combat {
+    height: 59px;
+    display: flex;
+    justify-content: center;
+}
+
+.field_icons_pl1, .field_icons_pl2 {
+    width: 160px;
+    display: flex;
+}
+
+.fieldn_main {
+    width: 644px;
+    display: flex;
+}
+
+.icons_pl1_back, .icons_pl1_front, .icons_pl2_back, .icons_pl2_front {
+    margin: 0;
+    padding: 0;
+    margin-top: 90px;
+    list-style: none;
+    width: 80px;
+    height: 405px;
+    background: url('./img/captain_info.png') no-repeat 60% 50%;
+}
+
+.icons_pl1_back li, .icons_pl1_front li, .icons_pl2_back li, .icons_pl2_front li {
+    height: 135px;
+    color: black;
+}
+
+.icons_pl1_back li div, .icons_pl1_front li div, .icons_pl2_back li div, .icons_pl2_front li div {
+    margin:auto;
+    padding-top: 10px;
+    text-align: center;
+} 
+
+.icon_active {
+    border: 2px solid mediumseagreen;
+    filter: drop-shadow(0 0 3px mediumseagreen);
+}
+
+.icon_target {
+    border: 2px solid magenta;
+    filter: drop-shadow(0 0 3px magenta);
+}
+
+.group_units_pl1, .group_units_pl2 {
+    width: 322px;
+    display: flex;
+    position: relative;
+    padding-top: 90px;
+}
+
+.units_pl1_back, .units_pl2_back, .units_pl1_front, .units_pl2_front {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    width: 100px;
+}
+
+.units_pl1_back {
+    margin-left: 22px;
+    margin-right: 35px;
+}
+
+.units_pl2_back {
+    margin-right: 22px;
+    margin-left: 35px;
+}
+
+.units_pl1_front {
+    margin-right: 65px;
+}
+
+.units_pl2_front {
+    margin-left: 65px;
+}
+
+.units_pl1_back li, .units_pl2_back li, .units_pl1_front li, .units_pl2_front li {
+    margin: auto;
+    height: 120px;
+    position: relative;
+    margin-bottom: 30px;
+    border: 1px solid yellow;
+}
+
+.b11, .b12, .b13, .f11, .f12, .f13, .f21, .f22, .f23, .b21, .b22, .b23 {
+    position: absolute;
+}
+
+.button_defend, .button_wait, .button_nobody {
+    height: 20px;
+    margin-top: 15px;
+    color: rgb(236, 236, 150);
+}
+
 .loading {
     height: 669px;
     width: 964px;
-    z-index: 500;
+    z-index: 700;
     background: url('./img/race_modal_pl2.jpg');
     filter: grayscale(0.7);
     opacity: 0.6;
@@ -1020,12 +1305,14 @@ a:hover {
 }
 
 .active_unit {
-    filter: drop-shadow(0 0 5px white);
+    filter: drop-shadow(0 0 5px mediumseagreen);
 }
 
 .active_target {
     filter: drop-shadow(0 0 5px magenta);
 }
+
+/*
 
 .finish_window {
     height: 669px;
@@ -1036,3 +1323,10 @@ a:hover {
     opacity: 0.6;
     margin-bottom: 30px;
 }
+
+.all_group_attack {
+    position: absolute;
+    z-index: 500;
+    text-align: center;
+    top: 100px;
+}*/

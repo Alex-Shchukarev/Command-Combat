@@ -1,539 +1,578 @@
 "use strict";
 
-import { createElem, getConfigArray, unitsList, buildSlotPlayer, fortune, Unit, slotUnitsEmpty, queueUnits } from './lib.js';
-import { setStartSettings, getNearOpponents, checkValidTarget, clearSlotAllUnits } from './lib.js';
+import { unitsList, combatModels, soundsMenu, soundsUnits } from './lib.js';
+import { createElem, fortune, getConfigArray, getConfigs, styleImage, buildSlotPlayer, setStartSettings } from './lib.js';
+import { queueUnits, slotUnitsEmpty, clearSlotAllUnits, getNearOpponents, checkValidTarget, styleImageAll } from './lib.js';
 
 export default class CombatWin {
 
     constructor() {
 
-        this.unitsList = unitsList;
-        this.slotUnitsPlayer1 = [];
-        this.slotUnitsPlayer2 = [];
-        this.listIdPlayer1 = [];
-        this.listIdPlayer2 = [];
+      this.unitsList = unitsList;
+      this.combatModels = combatModels;
+      this.soundsUnits = soundsUnits;
 
-        // load information about the first and the second players
-        let jsonconfig = localStorage.getItem( 'configFirstPlayer' );
-        this.configFirstPlayer = JSON.parse( jsonconfig );
-        jsonconfig = localStorage.getItem( 'configSecondPlayer' );
-        this.configSecondPlayer = JSON.parse( jsonconfig );
+      // загружаем конфигурации первого и второго игрока
+      let jsonconfig = localStorage.getItem( 'configFirstPlayer' );
+      this.configFirstPlayer = JSON.parse( jsonconfig );
+      jsonconfig = localStorage.getItem( 'configSecondPlayer' );
+      this.configSecondPlayer = JSON.parse( jsonconfig );
 
-        const elem = createElem( `<div class="big_container">
+      // создаем верстку на странице
+      const elem = createElem( `<div class="big_container">
         <div class="container"><div class="modal"></div>
-            <div class="combat_content header">
+            <div class="combat_content header_combat">
                 <div class="header_player1">
-                    <div class="phrase">Player 1<br><br>${this.configFirstPlayer.nickname}</div>
+                    <div class="phrase">Игрок 1</div>
                 </div>
                 <div class="header_nameGame">
                     <div class="name_game">Command Combat</div>
-                    <div class="emblem"></div>
                 </div>
                 <div class="header_player2">
-                    <div class="phrase">Player 2<br><br>${this.configSecondPlayer.nickname}</div>
+                    <div class="phrase">Игрок 2</div>
                 </div>
             </div>
-            <div class="combat_content field">
-                <div class="field_listPlayer1">
-                    <ul class="listPlayer1"></ul>
-                </div>
-                <div class="field_main">
-                    <div class="group_player1">
-                        <ul class="player1_back"></ul>
-                        <ul class="player1_front"></ul>
-                    </div>
-                    <div class="group_player2">
-                        <ul class="player2_front"></ul>
-                        <ul class="player2_back"></ul>
-                    </div>
-                </div>
-                <div class="field_listPlayer2">
-                    <ul class="listPlayer2"></ul>
-                </div>
-            </div>
-            <div class="combat_content footer">
-                <div class="btn_op button_defend">Defend</div>
-                <div class="btn_op button_wait">Waiting</div>
-                <div class="btn_op button_nobody">Nobody</div>
-            </div>
+            <div class="combat_content combat">
+              <div class="combat_content fieldn">
+                  <div class="field_icons_pl1">
+                      <ul class="icons_pl1_back"><li><div><img src="./img/empty_icon.jpg" class="i_b11"></div><div class="ih_b11">-</div></li>
+                        <li><div><img src="./img/empty_icon.jpg" class="i_b12"></div><div class="ih_b12">-</div></li>
+                        <li><div><img src="./img/empty_icon.jpg" class="i_b13"></div><div class="ih_b13">-</div></li></ul>
+                      <ul class="icons_pl1_front"><li><div><img src="./img/empty_icon.jpg" class="i_f11"></div><div class="ih_f11">-</div></li>
+                        <li><div><img src="./img/empty_icon.jpg" class="i_f12"></div><div class="ih_f12">-</div></li>
+                        <li><div><img src="./img/empty_icon.jpg" class="i_f13"></div><div class="ih_f13">-</div></li></ul>
+                  </div>
+                  <div class="fieldn_main">
+                      <div class="group_units_pl1"><img src="" class="field_allAttack_pl1">
+                          <ul class="units_pl1_back"><li><img src="" class="b11"></li>
+                            <li><img src="" class="b12"></li>
+                            <li><img src="" class="b13"></li></ul>
+                          <ul class="units_pl1_front"><li><img src="" class="f11"></li>
+                            <li><img src="" class="f12"></li>
+                            <li><img src="" class="f13"></li></ul>
+                      </div>
+                      <div class="group_units_pl2"><img src="" class="field_allAttack_pl2">
+                          <ul class="units_pl2_front"><li><img src="" class="f21"></li>
+                            <li><img src="" class="f22"></li>
+                            <li><img src="" class="f23"></li></ul>
+                          <ul class="units_pl2_back"><li><img src="" class="b21"></li>
+                            <li><img src="" class="b22"></li>
+                            <li><img src="" class="b23"></li></ul>
+                      </div>
+                  </div>
+                  <div class="field_icons_pl2">
+                      <ul class="icons_pl2_front"><li><div><img src="./img/empty_icon.jpg" class="i_f21"></div><div class="ih_f21">-</div></li>
+                        <li><div><img src="./img/empty_icon.jpg" class="i_f22"></div><div class="ih_f22">-</div></li>
+                        <li><div><img src="./img/empty_icon.jpg" class="i_f23"></div><div class="ih_f23">-</div></li></ul>
+                      <ul class="icons_pl2_back"><li><div><img src="./img/empty_icon.jpg" class="i_b21"></div><div class="ih_b21">-</div></li>
+                        <li><div><img src="./img/empty_icon.jpg" class="i_b22"></div><div class="ih_b22">-</div></li>
+                        <li><div><img src="./img/empty_icon.jpg" class="i_b23"></div><div class="ih_b23">-</div></li></ul>
+                  </div>
+              </div>
+              <div class="combat_content footer_combat">
+                  <div class="btn_op button_defend">ЗАЩИТА</div>
+                  <div class="btn_op button_wait">ОЖИДАТЬ</div>
+                  <div class="btn_op button_nobody">НИЧЬЯ</div>
+              </div>
+          </div>
         </div>
         </div>` );
 
-        // install fone for field of combat
-        this.fieldMain = elem.querySelector( '.field_main' );
-        this.fieldMain.classList.add( `${this.getFone()}_field` );
+      // устанавливаем фон для поля сражения
+      this.fieldMain = elem.querySelector( '.fieldn' );
+      this.fieldMain.classList.add( `${this.getFone()}_combat_field` );
 
-        // fill information about commands of players
-        this.listPlayer1 = elem.querySelector( '.listPlayer1' );
-        this.listPlayer2 = elem.querySelector( '.listPlayer2' );
+      // находим элементы боковых панелей и карты расстановки юнитов на поле
+      this.listPlayer1 = elem.querySelector( '.field_icons_pl1' );
+      this.listPlayer2 = elem.querySelector( '.field_icons_pl2' );
+      this.unitsOnFieldPlayer1 = elem.querySelector( '.group_units_pl1' );
+      this.unitsOnFieldPlayer2 = elem.querySelector( '.group_units_pl2' );
 
-        this.configFirstPlayer.raceUnits = getConfigArray( this.configFirstPlayer.race );
-        this.configSecondPlayer.raceUnits = getConfigArray( this.configSecondPlayer.race );
+      // получаем слоты юнитов для каждого игрока
+      this.idRacePlayer1 = getConfigArray( this.configFirstPlayer.race );
+      this.idRacePlayer2 = getConfigArray( this.configSecondPlayer.race );
+      this.slotConfigsPlayer1 = getConfigs( this.idRacePlayer1, this.configFirstPlayer.command );
+      this.slotConfigsPlayer2 = getConfigs( this.idRacePlayer2, this.configSecondPlayer.command );
 
-        // fill information about captains of players
-        let item = createElem( `<li data-id=0><div>
-            <img src="./img/${this.unitsList[this.configFirstPlayer.raceUnits][0][this.configFirstPlayer.captain][9]}"></div>
-            <div>${this.unitsList[this.configFirstPlayer.raceUnits][0][this.configFirstPlayer.captain][0]}<br><br>Health<br>
-            <span>${this.unitsList[this.configFirstPlayer.raceUnits][0][this.configFirstPlayer.captain][1]}</span></div></li>` );
-        this.slotUnitsPlayer1.push( this.unitsList[this.configFirstPlayer.raceUnits][0][this.configFirstPlayer.captain] );
-        this.listIdPlayer1.push( { id: 0, name: this.unitsList[this.configFirstPlayer.raceUnits][0][this.configFirstPlayer.captain][0] } );
-        this.listPlayer1.append( item );
-        
-        item = createElem( `<li data-id=0><div>
-            <img src="./img/${this.unitsList[this.configSecondPlayer.raceUnits][0][this.configSecondPlayer.captain][9]}"></div>
-            <div>${this.unitsList[this.configSecondPlayer.raceUnits][0][this.configSecondPlayer.captain][0]}<br><br>Health<br>
-            <span>${this.unitsList[this.configSecondPlayer.raceUnits][0][this.configSecondPlayer.captain][1]}</span></div></li>` );
-        this.slotUnitsPlayer2.push( this.unitsList[this.configSecondPlayer.raceUnits][0][this.configSecondPlayer.captain] );
-        this.listIdPlayer2.push( { id: 0, name: this.unitsList[this.configSecondPlayer.raceUnits][0][this.configSecondPlayer.captain][0] } );
-        this.listPlayer2.append( item );
+      // наполняем боковую панель и расставляем юнитов на поле боя для первого игрока
+      for( let item of this.slotConfigsPlayer1 ) {
+        // вставляем аватарку и здоровье в боковую панель 
+        this.listPlayer1.querySelector( `.i_${item[11]}`).setAttribute( 'src', `./img/${item[9]}` );
+        this.listPlayer1.querySelector( `.ih_${item[11]}`).innerHTML = item[1];
+        let elem = this.combatModels[this.configFirstPlayer.race]; // получаем массив моделей расы 1го игрока
+        let soundsUnits = this.soundsUnits[this.idRacePlayer1]; // получаем массив звуков моделей юнитов 1го игрока
+        let animationDate = elem[ Number( item[10] ) ].left; // выбираем вариант расположения слева так как игрок_1
+        let soundUnit = [ soundsUnits[ Number( item[10] ) ], soundsUnits[0] ]; // получаем звук для конкретного юнита
+        let url = animationDate[0].path; // получаем ссылку на анимацию юнита в состоянии покоя
+        let leftCoord = animationDate[0].size[0]; // получаем ширину анимации
+        let topCoord = animationDate[0].size[1]; // получаем высоту анимации
+        let coords = styleImage( leftCoord, topCoord ); // рассчитываем координаты для центровки на поле битвы
+        this.unitsOnFieldPlayer1.querySelector( `.${item[11]}` ).setAttribute( 'src', `${url}` ); // добавляем анимацию юнита на поле
+        let image = this.unitsOnFieldPlayer1.querySelector( `.${item[11]}` ); // получаем элемент анимации с DOM
+        image.closest( 'li' ).setAttribute( 'data-id', `${item[11]}` );
+        // задаем отцентрованое позиционирование анимации
+        image.style.position = 'absolute';
+        image.style.left = coords[0] + 'px';
+        image.style.top = coords[1] + 'px';
+        // добавляем массив анимаций юнита с размерами в конфигурацию юнита
+        animationDate.push( elem[0].left ); // анимация смерти юнита
+        item.push( animationDate ); // добавляем весь массив анимаций юнита
+        item.push( soundUnit ); // добавляем звуки юнита
+          
+      }
 
-        // fill information about units of players
-        let counter = 1;
-        for( let unit of this.configFirstPlayer.command ) {
+      // наполняем боковую панель и расставляем юнитов на поле боя для второго игрока
+      for( let item of this.slotConfigsPlayer2 ) {
 
-            let item = createElem( `<li data-id=${counter}><div><img src="./img/${this.unitsList[this.configFirstPlayer.raceUnits][1][unit][9]}"></div>
-            <div>${this.unitsList[this.configFirstPlayer.raceUnits][1][unit][0]}<br><br>Health<br><span>
-            ${this.unitsList[this.configFirstPlayer.raceUnits][1][unit][1]}</span></div></li>` );
-            this.slotUnitsPlayer1.push( this.unitsList[this.configFirstPlayer.raceUnits][1][unit] );
-            this.listIdPlayer1.push( { id: counter, name: this.unitsList[this.configFirstPlayer.raceUnits][1][unit][0] } );
-            this.listPlayer1.append( item );
-            counter++;
+        this.listPlayer2.querySelector( `.i_${item[11]}`).setAttribute( 'src', `./img/${item[9]}` );
+        this.listPlayer2.querySelector( `.ih_${item[11]}`).innerHTML = item[1];
+        let elem = this.combatModels[this.configSecondPlayer.race];
+        let soundsUnits = this.soundsUnits[this.idRacePlayer2];
+        let animationDate = elem[ Number( item[10] ) ].right;
+        let soundUnit = [ soundsUnits[ Number( item[10] ) ], soundsUnits[0] ];
+        let url = animationDate[0].path;
+        let leftCoord = animationDate[0].size[0];
+        let topCoord = animationDate[0].size[1];
+        let coords = styleImage( leftCoord, topCoord );
+        this.unitsOnFieldPlayer2.querySelector( `.${item[11]}` ).setAttribute( 'src', `${url}` );
+        let image = this.unitsOnFieldPlayer2.querySelector( `.${item[11]}` );
+        image.closest( 'li' ).setAttribute( 'data-id', `${item[11]}` );
+        image.style.position = 'absolute';
+        image.style.left = coords[0] + 'px';
+        image.style.top = coords[1] + 'px';
+        animationDate.push( elem[0].left );
+        item.push( animationDate );
+        item.push( soundUnit );
 
-        }
+      }
 
-        counter = 1;
-        for( let unit of this.configSecondPlayer.command ) {
+      // добавляем весь контент на страницу
+      this.mainContainer = document.querySelector( '.main_container' );
+      this.mainContainer.append( elem );
+      this._elem = elem;
 
-            let item = createElem( `<li data-id=${counter}><div><img src="./img/${this.unitsList[this.configSecondPlayer.raceUnits][1][unit][9]}"></div>
-            <div>${this.unitsList[this.configSecondPlayer.raceUnits][1][unit][0]}<br><br>Health<br><span>
-            ${this.unitsList[this.configSecondPlayer.raceUnits][1][unit][1]}</span></div></li>` );
-            this.slotUnitsPlayer2.push( this.unitsList[this.configSecondPlayer.raceUnits][1][unit] );
-            this.listIdPlayer2.push( { id: counter, name: this.unitsList[this.configSecondPlayer.raceUnits][1][unit][0] } );
-            this.listPlayer2.append( item );
-            counter++;
+      // загружаем заставку перед началом боя
+      this.modalWindow = this._elem.querySelector( '.modal' );
+      this.modalWindow.classList.add( 'loading' );
+      const buttonFight = createElem( `<a href="#" class="btn_op">Начать Бой</a>` );
+      this.modalWindow.append( buttonFight );
+      buttonFight.addEventListener( 'click', this.startFight );
 
-        }
+      // формируем слоты экземпляры объектов юнитов для каждого игрока и общий слот всех юнитов
+      this.slotPlayer1 = [ ...buildSlotPlayer( this.slotConfigsPlayer1, this.idRacePlayer1 ) ];
+      this.slotPlayer2 = [ ...buildSlotPlayer( this.slotConfigsPlayer2, this.idRacePlayer2 ) ];
+      this.slotAllUnits = [...this.slotPlayer1, ...this.slotPlayer2];
 
-        this.separateUnitsKindAttack( this.slotUnitsPlayer1 );
+      this.actionDone = false; // устанавливаем выполнение хода в положение невыполнен
 
-        this.player1Front = elem.querySelector( '.player1_front' );
-        this.player1Back = elem.querySelector( '.player1_back' );
-        
-        this.flag = 'f1';
-        this.setUnitsOnField( this.player1Front, this.nearArrayUnits, this.configFirstPlayer.race, this.flag, this.slotUnitsPlayer1 );
-
-        this.flag = 'b1';
-        this.setUnitsOnField( this.player1Back, this.anyArrayUnits, this.configFirstPlayer.race, this.flag, this.slotUnitsPlayer1 );
-
-        this.separateUnitsKindAttack( this.slotUnitsPlayer2 );
-
-        this.player2Front = elem.querySelector( '.player2_front' );
-        this.player2Back = elem.querySelector( '.player2_back' );
-
-        this.flag = 'f2';
-        this.setUnitsOnField( this.player2Front, this.nearArrayUnits, this.configSecondPlayer.race, this.flag, this.slotUnitsPlayer2 );
-
-        this.flag = 'b2';
-        this.setUnitsOnField( this.player2Back, this.anyArrayUnits, this.configSecondPlayer.race, this.flag, this.slotUnitsPlayer2 );
-
-        this.player1Back = this.player1Back.querySelectorAll( 'li' );
-        this.player1Front = this.player1Front.querySelectorAll( 'li' );
-        this.player2Back = this.player2Back.querySelectorAll( 'li' );
-        this.player2Front = this.player2Front.querySelectorAll( 'li' );
-
-        this.mainContainer = document.querySelector( '.main_container' );
-        this.mainContainer.append( elem );
-        this._elem = elem;
-
-        this.modalWindow = this._elem.querySelector( '.modal' );
-        this.modalWindow.classList.add( 'loading' );
-        const buttonFight = createElem( `<a href="#" class="btn_op">Start Fight</a>` );
-        this.modalWindow.append( buttonFight );
-        buttonFight.addEventListener( 'click', this.startFight );
-
-        this.slotPlayer1 = [...buildSlotPlayer( this.slotUnitsPlayer1 )];
-        this.slotPlayer2 = [...buildSlotPlayer( this.slotUnitsPlayer2 )];
-        this.slotAllUnits = [...this.slotPlayer1, ...this.slotPlayer2];
-
-        this.actionDone = false;
-
-        this.buttonPanel = this._elem.querySelector( '.footer' );
-        this.buttonPanel.addEventListener( 'click', this.clickButton );
-        this.fieldMain.addEventListener( 'pointerover', this.overTarget );
-        this.fieldMain.addEventListener( 'pointerout', this.leaveTarget );
-
-        console.log(this.listIdPlayer1);
-        console.log(this.listIdPlayer2);
+      // вешаем обработчики на панель с кнопками и подсвечивание цели
+      this.buttonPanel = this._elem.querySelector( '.footer_combat' );
+      this.buttonPanel.addEventListener( 'click', this.clickButton );
+      this.fieldMain.addEventListener( 'pointerover', this.overTarget );
+      this.fieldMain.addEventListener( 'pointerout', this.leaveTarget );
+      console.log(this.slotConfigsPlayer2);
+      console.log(this.slotAllUnits);
 
     }
 
+    // получаем фон для поля битвы
     getFone = () => {
 
-        const result = fortune();
-        if( result === -1 ) return this.configSecondPlayer.race;
-        else return this.configFirstPlayer.race;
+      const result = fortune();
+      if( result === -1 ) return this.configSecondPlayer.race;
+      else return this.configFirstPlayer.race;
 
     }
 
-    separateUnitsKindAttack = ( slotUnits ) => {
-
-        this.nearArrayUnits = slotUnits.filter( item => item[8] == 'near' );
-        this.nearArrayUnits.sort( ( a, b ) => b[1] - a[1] );
-        this.anyArrayUnits = slotUnits.filter( item => item[8] == 'any' );
-        this.anyArrayUnits.sort( ( a, b ) => b[1] - a[1] );
-    
-    }
-
-    setUnitsOnField = ( slot, arrayUnits, race, flag, slotUnitPlayer ) => {
-
-        switch ( arrayUnits.length ) {
-
-            case 1:
-                for( let i = 1; i < 4; i++ ) {
-
-                    if( i === 2 ) {
-
-                        let item = createElem( `<li data-id=${flag+i}><img src="./animation/${race}/${arrayUnits[0][10][0]}"></li>`);
-                        slot.append( item );
-                        slotUnitPlayer.forEach( elem => { if( elem[0] === arrayUnits[0][0] ) elem.push( flag+i ); } );
-                        continue;
-
-                    }
-                    let item = createElem( `<li data-id=${flag+i}></li>`);
-                    slot.append( item );
-
-                }
-                break;
-
-            case 2:
-                for( let i = 1; i < 4; i++ ) {
-
-                    if( i === 1 ) {
-
-                        let item = createElem( `<li data-id=${flag+i}><img src="./animation/${race}/${arrayUnits[0][10][0]}"></li>`);
-                        slot.append( item );
-                        slotUnitPlayer.forEach( elem => { if( elem[0] === arrayUnits[0][0] ) elem.push( flag+i ); } );
-                        continue;
-
-                    }
-
-                    if( i === 3 ) {
-
-                        let item = createElem( `<li data-id=${flag+i}><img src="./animation/${race}/${arrayUnits[1][10][0]}"></li>`);
-                        slot.append( item );
-                        slotUnitPlayer.forEach( elem => { if( elem[0] === arrayUnits[1][0] ) elem.push( flag+i ); } );
-                        continue;
-
-                    }
-
-                    let item = createElem( `<li data-id=${flag+i}></li>`);
-                    slot.append( item );
-
-                }
-                break;
-        
-            case 3:
-                for( let i = 1; i < 4; i++ ) {
-
-                    if( i === 1 ) {
-
-                        let item = createElem( `<li data-id=${flag+i}><img src="./animation/${race}/${arrayUnits[1][10][0]}"></li>`);
-                        slot.append( item );
-                        slotUnitPlayer.forEach( elem => { if( elem[0] === arrayUnits[1][0] ) elem.push( flag+i ); } );
-                        continue;
-
-                    }
-
-                    if( i === 2 ) {
-
-                        let item = createElem( `<li data-id=${flag+i}><img src="./animation/${race}/${arrayUnits[0][10][0]}"></li>`);
-                        slot.append( item );
-                        slotUnitPlayer.forEach( elem => { if( elem[0] === arrayUnits[0][0] ) elem.push( flag+i ); } );
-                        continue;
-
-                    }
-
-                    if( i === 3 ) {
-
-                        let item = createElem( `<li data-id=${flag+i}><img src="./animation/${race}/${arrayUnits[2][10][0]}"></li>`);
-                        slot.append( item );
-                        slotUnitPlayer.forEach( elem => { if( elem[0] === arrayUnits[2][0] ) elem.push( flag+i ); } );
-                        continue;
-
-                    }
-
-                }
-                break;
-
-        }
-
-    }
-
+    // убираем заставку перед боем и запускаем функцию пошаговых ходов
     startFight = () => {
+      // вставляем звук начала боя
+      const audio = new Audio();
+      audio.src = `${soundsMenu.startBattle}`; 
+      audio.autoplay = true;
 
-        // paste sound for button
-        const audio = new Audio();
-        audio.src = `${soundsMenu.buttonClickStart}`; 
-        audio.autoplay = true;
-
-        this.modalWindow.classList.remove( 'loading' );
-        this.modalWindow.remove();
-        setTimeout( () => this.doAction(), 1500 );
+      this.modalWindow.classList.remove( 'loading' );
+      this.modalWindow.remove();
+      this.doAction();
 
     }
 
     clickButton = ( event ) => {
 
-        // paste sound for button
-        const audio = new Audio();
-        audio.src = `${soundsMenu.buttonClickStart}`; 
-        audio.autoplay = true;
-
-        const target = event.target;
-        if( target.closest( '.button_defend' ) ) {
-
-            const unit = this._elem.querySelector( '.active_unit' );
-            this.slotAllUnits.forEach( item => { if( item.position === unit.dataset.id ) item.defend(); } );
-            this.actionDone = true;
-
-        } else if( target.closest( '.button_wait' ) ) {
-
-            let indeks;
-            const lengthSlot = this.slotAllUnits.length - 1;
-            const unit = this._elem.querySelector( '.active_unit' );
-            this.slotAllUnits.forEach( ( item, index ) => { if( item.position === unit.dataset.id ) indeks = index; } );
+      const target = event.target;
+      if( target.closest( '.button_defend' ) ) { // если нажата кнопка защита
         
-            if( indeks === lengthSlot ) {
+        // находим объект активного юнита и уставливаем ему защиту     
+        let unit = this._elem.querySelector( '.active_unit' );
+        let flag = unit.closest( 'li' ).dataset.id;
+        this.slotAllUnits.forEach( item => { if( item.position === flag ) item.defend(); } );
+        this.actionDone = true;
 
-                return;
+      } else if( target.closest( '.button_wait' ) ) { // если нажата кнопка ожидания
 
-            } else {
+        let indeks;
+        const lengthSlot = this.slotAllUnits.length - 1;
+        let unit = this._elem.querySelector( '.active_unit' ); 
+        let flag = unit.closest( 'li' ).dataset.id;
+        this.slotAllUnits.forEach( ( item, index ) => { if( item.position === flag ) indeks = index; } );
+        console.log(indeks);
+        if( indeks === lengthSlot ) { // если юнит последний в очереди на ход, то отменяем ожидание
 
-                const removeElem = this.slotAllUnits.splice( indeks, 1, 'transfer' );
-                this.slotAllUnits.push( ...removeElem );
+          return;
 
-            }
-            this.actionDone = true;
+        } else {
+          // загружаем звук ожидания
+          const audio = new Audio();
+          audio.src = `${soundsMenu.combatWait}`; 
+          audio.autoplay = true;
+          // вставляем заглушку на место юнита в очереди и переносим его в конец очереди
+          let removeElem = this.slotAllUnits.splice( indeks, 1, 'transfer' );
+          console.log(removeElem);
+          this.slotAllUnits.push( ...removeElem );
+          console.log(this.slotAllUnits);
 
-        } else if( target.closest( '.button_nobody' ) ) {
-            
-            const container = this._elem.querySelector( '.container' );
-            container.insertAdjacentHTML( 'afterbegin', '<div class="finish_window"></div>' );
-            const finishWindow = this._elem.querySelector( '.finish_window' );
-            const buttonFinish = createElem( `<a href="#" class="btn_op">Finish</a>` );
-            finishWindow.append( buttonFinish );
-            buttonFinish.addEventListener( 'click', this.endFight );
+        }
+        
+        this.actionDone = true;
 
-        } else return;
+      } else if( target.closest( '.button_nobody' ) ) { // если нажата кнопка ничья
+        // вставляем окно завершения сражения с кнопками конец и новая игра
+        const container = this._elem.querySelector( '.container' );
+        container.insertAdjacentHTML( 'afterbegin', '<div class="finish_window"></div>' );
+        const finishWindow = this._elem.querySelector( '.finish_window' );
+        const buttonFinish = createElem( `<a href="#" class="btn_op">КОНЕЦ</a>` );
+        finishWindow.append( buttonFinish );
+        buttonFinish.addEventListener( 'click', this.endFight );
+
+      } else return;
 
     }
 
+    // завершаем бой и очищаем окно
+    endFight = () => {
+
+      this.mainContainer.innerHTML = '';
+
+    }
+    
+    // вешаем обработчик подсвеченному юниту, как потенциальной цели
+    // getTarget = () => {
+
+    //   this.activeTarget = this._elem.querySelector( '.active_target' );
+    //   this.activeTarget.addEventListener( 'click', this.catchTarget );
+
+    // }
+
+    // получаем слот игрока - опонента
     chooseSlot = ( identificator ) => {
 
-        if( identificator[1] === '1' ) return this.slotPlayer1;
-        else return this.slotPlayer2;
+      if( identificator[1] === '1' ) return this.slotPlayer1;
+      else return this.slotPlayer2;
+
+    }
+
+    // делаем подсветку юниту и его иконке и вешаем обработчик
+    getTarget = ( target, identificator ) => {
+
+      target.classList.add( 'active_target' );
+      this._elem.querySelector( `.i_${identificator}` ).classList.add( 'icon_target' );
+      this.activeTarget = this._elem.querySelector( '.active_target' );
+      this.activeTarget.addEventListener( 'click', this.catchTarget );
 
     }
 
     overTarget = ( event ) => {
 
-        let slotOpponents;
-        const target = event.target;
-        const identificator = target.closest( '[data-id]' ).dataset.id;
-
-        if( this.activeUnit.kind === 'Priest' && this.activeUnit.position[1] === identificator[1] ) {
-            
-            target.classList.add( 'active_target' );
-            this.getTarget();
+      let target = event.target;
+      let identificator = target.closest( '[data-id]' ).dataset.id;
+      // если активный юнит священник, то должен лечить только юнитов своей команды
+      if( this.activeUnit.kind === 'Священник' && this.activeUnit.position[1] === identificator[1] ) { 
+        // добавляем подстветку юниту - потенциальной цели и его иконке
+        this.getTarget( target, identificator ); // передаем управление дальше
         
-        } else if( this.activeUnit.kind === 'Priest' && this.activeUnit.position[1] !== identificator[1] ) { 
+      } else if( this.activeUnit.kind === 'Священник' && this.activeUnit.position[1] !== identificator[1] ) { // юниты не своей команды
             
-            return; 
+        return; 
         
-        } else if( this.activeUnit.position[1] === identificator[1] || identificator == null ) { 
+      } else if( this.activeUnit.position[1] === identificator[1] || identificator == null ) { // юниты своей команды
             
-            return; 
+        return; 
         
-        } else {
+      } else if( this.activeUnit.position[1] !== identificator[1] ) { // юниты не своей команды
 
-            if( this.activeUnit.distanse === 'any' ) {
+        if( this.activeUnit.distanse === 'дальняя' ) { // если у юнита дистанционная атака
                 
-                target.classList.add( 'active_target' );
-                this.getTarget();
+          this.getTarget( target, identificator );
             
-            } else {
+        } else if( this.activeUnit.distanse === 'ближняя' ) {
 
-                slotOpponents = getNearOpponents( this.chooseSlot( identificator ) );
+          let slotOpponents = getNearOpponents( this.chooseSlot( identificator ) );
+          let slotActiveUnit = getNearOpponents( this.chooseSlot( this.activeUnit.position ) );
+          console.log( slotActiveUnit );
+          if( checkValidTarget( this.activeUnit.position, slotOpponents, identificator, slotActiveUnit ) ) {
+            
+            this.getTarget( target, identificator );
                 
-                if( checkValidTarget( this.activeUnit.position[2], slotOpponents, identificator ) ) {
-                    
-                    target.classList.add( 'active_target' );
-                    this.getTarget();
+          } else { return; }
                 
-                } else return;
-                
-            }
-    
         }
-
-    }
-
-    getTarget = () => {
-
-        this.activeTarget = this._elem.querySelector( '.active_target' );
-        this.activeTarget.addEventListener( 'click', this.catchTarget );
+    
+      }
 
     }
     
     catchTarget = ( event ) => {
 
-        event.preventDefault();
+      event.preventDefault(); // отменяем действие браузера по умолчанию
 
-        const target = event.target;
-        const identificator = target.closest( '[data-id]' ).dataset.id;
-        const slotOpponents = this.chooseSlot( identificator );
-        const opponent = [ slotOpponents.find( item => item.position === identificator ) ];
+      let target = event.target;
+      let ident = target.closest( '[data-id]' ); // находим элемент у которого есть id
+      let opponent = [];
+      let identificator = ident.dataset.id; // получаем идентификатов юнита по которому кликнули
+
+      let slotOpponents = this.chooseSlot( identificator ); // получаем слот всех юнитов опонента 
+      let unitTarget = slotOpponents.find( item => item.position === identificator ); // получаем юнита по которому кликнули
+      opponent.push( unitTarget );
+
+      if( this.activeUnit.targets === 1 ) { // для атакующих юнитов у которых кол-во целей 1
         
-        // let listOpponent, listId;
-        // if( identificator[1] === '1' ) { listOpponent = this.listPlayer1; listId = this.listIdPlayer1; }
-        // else { listOpponent = this.listPlayer2; listId = this.listIdPlayer2; }
-
-        if( this.activeUnit.targets === 1 ) {
-            this.activeUnit.attack( opponent );
-            // this.checkUnitLive( opponent, slotOpponents, this.slotAllUnits );
-        }
-        else if( this.activeUnit.targets === 6 ) {
-            this.activeUnit.attack( slotOpponents );
-            //for( let unit of slotOpponents ) this.checkUnitLive( unit, slotOpponents, this.slotAllUnits );
-        }
-
-        this.actionDone = true;
+        this.attack( opponent );
+        
+      } else if( this.activeUnit.targets === 6 ) { // для атакующих юнитов сразу по всем юнитам опонента
+            
+        this.attackAll( slotOpponents, identificator );
+        
+      }
 
     }
 
+    // покидаем потенциальную цель
     leaveTarget = () => {
 
-        this.activeTarget.removeEventListener( 'click', this.catchTarget );
-        this.activeTarget.classList.remove( 'active_target' );
+      this.activeTarget.removeEventListener( 'click', this.catchTarget );
+      this._elem.querySelector( '.icon_target' ).classList.remove( 'icon_target' );
+      this.activeTarget.classList.remove( 'active_target' );
 
     }
 
+    // проверка уровня здоровья юнита
     checkUnitLive = ( unit, slotPlayer, slotCombat ) => {
 
-        if( unit.currentHealth <= 0 ) {
+      if( unit.currentHealth <= 0 ) { // если юнита убили
 
-            slotPlayer.forEach( ( elem, index, array ) => {
+        slotPlayer.forEach( ( elem, index, array ) => {
                 
-                if( elem.position === unit.position) {
+          if( elem.position === unit.position) { 
                     
-                    array.splice( index, 1, 'transfer' );
-                    
-                    if( unit.position[1] === '1' ) {
+            array.splice( index, 1, 'transfer' ); // удаляем объект юнита из слота игрока и вставляем заглушку
+            // загружаем звук умирающего юнита
+            const audio = new Audio();
+            audio.src = `${unit.unitDeathSound}`; 
+            audio.autoplay = true;
+            // заменяем иконку юнита заглушкой, удаляем цифру здоровье и загружаем анимации ухода с поля боя
+            this._elem.querySelector( `.i_${unit.position}` ).setAttribute( 'src', './img/deadicon.png' );
+            this._elem.querySelector( `.ih_${unit.position}` ).innerHTML = '-';
+            let coords = styleImage( unit.unitDeath.size[0], unit.unitDeath.size[1] );
+            this._elem.querySelector( `.${unit.position}` ).setAttribute( 'src', `${unit.unitDeath.path}` );
+            let image = this._elem.querySelector( `.${unit.position}` );
+            image.closest( 'li' ).removeAttribute( 'data-id' );
+            image.style.position = 'absolute';
+            image.style.left = coords[0] + 'px';
+            image.style.top = coords[1] + 'px';
 
-                        this.listIdPlayer1.forEach( obj => { if( obj.name === unit.kind ) {
-                        this.listPlayer1.querySelector( `[data-id="${obj.id}"]` ).innerHTML = '';
-                        this.listPlayer1.querySelector( `[data-id="${obj.id}"]` ).append( createElem( `<div><img src="./img/deadicon.png"></div>` ) );
-                        } } );
-
-                        this._elem.querySelector( `[data-id="${unit.position}"]` ).innerHTML = '';
-                        this._elem.querySelector( `[data-id="${unit.position}"]` ).removeAttribute( `${unit.position}` );
-                    
-                    } else if( unit.position[1] === '2' ) {
-
-                        this.listIdPlayer2.forEach( obj => { if( obj.name === unit.kind ) {
-                        this.listPlayer2.querySelector( `[data-id="${obj.id}"]` ).innerHTML = '';
-                        this.listPlayer2.querySelector( `[data-id="${obj.id}"]` ).append( createElem( `<div><img src="./img/deadicon.png"></div>` ) );
-                        } } );
-
-                        this._elem.querySelector( `[data-id="${unit.position}"]` ).innerHTML = '';
-                        this._elem.querySelector( `[data-id="${unit.position}"]` ).removeAttribute( `${unit.position}` );
-                    
-                    } 
-
-                }
+          }
                 
-            } );
+        } );
 
-        slotCombat.forEach( ( item, index, array ) => { 
-            if( item !== 'transfer' && item.position === unit.position ) array.splice( index, 1, 'transfer' );
+        slotCombat.forEach( ( item, index, array ) => { // в общем слоте всех юнитов удаляем юнита и вставляем на его место заглушку
+            
+          if( item !== 'transfer' && item.position === unit.position ) array.splice( index, 1, 'transfer' );
+        
         } );
             
-        } else if( unit.currentHealth < unit.health ) {
+      } else if( unit.currentHealth <= unit.health || unit.currentHealth >= unit.health ) { // если юнита ранили или полечили
             
-            slotPlayer.forEach( ( item, index ) => {
+        slotPlayer.forEach( ( item ) => {
                 
-                if( item.position === unit.position && unit.position[1] === '1' ) {
-
-                    this.listIdPlayer1.forEach( obj => { if( obj.name === unit.kind ) {
-                        
-                        let elemHealth = this.listPlayer1.querySelector( `[data-id="${obj.id}"]` );
-                        elemHealth.querySelector( 'span' ).innerHTML = `${unit.currentHealth}`;
-                    } } );
-
-                } else if( item.position === unit.position && unit.position[1] === '2' ) {
+          if( item.position === unit.position ) { 
+            // устанавливаем в боковую панель новое значение здоровья
+            this._elem.querySelector( `.ih_${unit.position}` ).innerHTML = `${unit.currentHealth}`;
     
-                    this.listIdPlayer2.forEach( obj => { if( obj.name === unit.kind ) {
-                        
-                        let elemHealth = this.listPlayer2.querySelector( `[data-id="${obj.id}"]` );
-                        elemHealth.querySelector( 'span' ).innerHTML = `${unit.currentHealth}`;
-                    } } ); 
-    
-                } 
-            } );
+          } 
+        
+        } );
             
-        } else return;
+      } else return;
 
     }
 
+    // реализация очереди пошаговых ходов 
     async doAction() {
 
-        leaveFight: while( !slotUnitsEmpty( this.slotPlayer1 ) && !slotUnitsEmpty( this.slotPlayer2 ) ) {
+      leaveFight: while( !slotUnitsEmpty( this.slotPlayer1 ) && !slotUnitsEmpty( this.slotPlayer2 ) ) { // проверка не пусты ли слоты
             
-            setStartSettings( this.slotAllUnits );
-            queueUnits( this.slotAllUnits );
-            for( let unit of this.slotAllUnits ) {
+        setStartSettings( this.slotAllUnits ); // устанавливаем броню в стартовые значения
+        queueUnits( this.slotAllUnits ); // очередь приоритета ходов юнитов
+        for( let unit of this.slotAllUnits ) {
+          console.log(this.slotAllUnits, unit);
+          if( !unit.kind ) continue; // проверка юнит это или нет
+          // добавляем юниту и его иконке подсветку
+          let elemUnit = this._elem.querySelector( `.${unit.position}` ); 
+          let iconUnit = this._elem.querySelector( `.i_${unit.position}` );
+          elemUnit.classList.add( 'active_unit' );
+          iconUnit.classList.add( 'icon_active' );
+          this.activeUnit = unit;
 
-                if( !unit.kind ) continue;
-                let elemLiUnit = this._elem.querySelector( `[data-id="${unit.position}"]` );
-                elemLiUnit.classList.add( 'active_unit' );
-                this.activeUnit = unit;
+          while( !this.actionDone ) { // ожидаем действие пользователя
 
-                while( !this.actionDone ) {
+            await new Promise( ( resolve ) => setTimeout( resolve, 500 ) );
 
-                    await new Promise( (resolve) => setTimeout( resolve, 1500 ) );
+          }
+          await new Promise( ( resolve ) => setTimeout( resolve, 100 ) );
+          // удаляем подсветку уюнита и его иконки
+          elemUnit.classList.remove( 'active_unit' );
+          iconUnit.classList.remove( 'icon_active' );
+                
+          // проверяем слоты юнитов, если какой-то пуст завершаем битву и выводим окно с победителем
+          if( slotUnitsEmpty( this.slotPlayer1 ) ) { console.log( 'Player2 is winner!' ); break leaveFight; }
+          if( slotUnitsEmpty( this.slotPlayer2 ) ) { console.log( 'Player1 is winner!' ); break leaveFight; }
+                
+          this.actionDone = false; // устанавливаем флаг, что действие невыполнено для следующего юнита
 
-                }
+        }  
+        // очищаем слоты от заглушек
+        clearSlotAllUnits( this.slotAllUnits );
+        clearSlotAllUnits( this.slotPlayer1 );
+        clearSlotAllUnits( this.slotPlayer2 );
 
-                elemLiUnit.classList.remove( 'active_unit' );
-                this.actionDone = false;
-                console.log(this.slotAllUnits);
-                console.log(this.slotPlayer1);
-                console.log( this.slotPlayer2);
-                for( let soldier of this.slotPlayer1 ) { 
-                    if( soldier !== 'transfer' ) this.checkUnitLive( soldier, this.slotPlayer1, this.slotAllUnits );
-                }
-                for( let soldier of this.slotPlayer2 ) {
-                    if( soldier !== 'transfer' ) this.checkUnitLive( soldier, this.slotPlayer2, this.slotAllUnits );
-                }
-                if( slotUnitsEmpty( this.slotPlayer1 ) ) { console.log( 'Player2 is winner!' ); break leaveFight; }
-                if( slotUnitsEmpty( this.slotPlayer2 ) ) { console.log( 'Player1 is winner!' ); break leaveFight; }
+      }
 
-            }
+    }
+
+    async attack( opponents ) {
+      
+      let elemActiveUnit = this._elem.querySelector( `.${this.activeUnit.position}` ); // элемент для дальнейшей замены на анимацию атаки
+      let coordsActiveUnit = styleImage( this.activeUnit.unitAttack.size[0], this.activeUnit.unitAttack.size[1] );
+      let elemActiveTarget = this._elem.querySelector( `.${opponents[0].position}` ); // элемент для дальнейшей замены на анимацию получения урона
+      let coordsActiveTarget = styleImage( opponents[0].unitGetDam.size[0], opponents[0].unitGetDam.size[1] );
+      // загружаем звук атаки юнита
+      const audio = new Audio();
+      audio.src = `${this.activeUnit.unitAttackSound}`; 
+      audio.autoplay = true;
+      // загружаем отцентрованную анимацию атаки юнита
+      elemActiveUnit.setAttribute( 'src', `${this.activeUnit.unitAttack.path}` );
+      elemActiveUnit.style.position = 'absolute';
+      elemActiveUnit.style.left = coordsActiveUnit[0] + 'px';
+      elemActiveUnit.style.top = coordsActiveUnit[1] + 'px';
+      await new Promise( ( resolve ) => setTimeout( resolve, 2000 ) ); // ждем 2/3 удара, чтобы цель поменяла анимашку в середине атаки
+      
+      for( let opponent of opponents ) {
+
+          elemActiveTarget.setAttribute( 'src', `${opponent.unitGetDam.path}` );
+          elemActiveTarget.style.position = 'absolute';
+          elemActiveTarget.style.left = coordsActiveTarget[0] + 'px';
+          elemActiveTarget.style.top = coordsActiveTarget[1] + 'px';
+          let damage = this.activeUnit.damage - Math.floor( ( this.activeUnit.damage * opponent.currentArmor / 100 ) );
+          let magicalDamage = this.activeUnit.magicalDamage - Math.floor( (this.activeUnit.magicalDamage * opponent.magicalDefense / 100 ) );
+          opponent.currentHealth -= ( damage + magicalDamage );
+      
+      }
+
+      await new Promise( ( resolve ) => setTimeout( resolve, 1000 ) ); // ждем оставшуюся часть анимации атаки
+
+      // загружаем отцентрованную анимацию статики юнита который атаковал и получал урон
+      let elementActiveUnit = this._elem.querySelector( `.${this.activeUnit.position}` );
+      let elementActiveTarget = this._elem.querySelector( `.${opponents[0].position}` );
+      let coordsAttackUnit = styleImage( this.activeUnit.unitStatic.size[0], this.activeUnit.unitStatic.size[1] );
+      let coordsGetDamUnit = styleImage( opponents[0].unitStatic.size[0], opponents[0].unitStatic.size[1] );
+      elemActiveUnit.style = '';
+      elementActiveUnit.setAttribute( 'src', `${this.activeUnit.unitStatic.path}` );
+      elementActiveUnit.style.position = 'absolute';
+      elementActiveUnit.style.left = coordsAttackUnit[0] + 'px';
+      elemActiveUnit.style.top = coordsAttackUnit[1] + 'px';
+      elementActiveTarget.style = '';
+      elementActiveTarget.setAttribute( 'src', `${opponents[0].unitStatic.path}` );
+      elementActiveTarget.style.position = 'absolute';
+      elementActiveTarget.style.left = coordsGetDamUnit[0] + 'px';
+      elementActiveTarget.style.top = coordsGetDamUnit[1] + 'px';
+
+      for( let soldier of this.slotPlayer1 ) { // проверяем слот игрока есть ли мертвые юниты
+                  
+        if( soldier !== 'transfer' ) this.checkUnitLive( soldier, this.slotPlayer1, this.slotAllUnits );
+      
+      }
             
-            clearSlotAllUnits( this.slotAllUnits );
-            clearSlotAllUnits( this.slotPlayer1 );
-            clearSlotAllUnits( this.slotPlayer2 );
+      for( let soldier of this.slotPlayer2 ) {
+                
+        if( soldier !== 'transfer' ) this.checkUnitLive( soldier, this.slotPlayer2, this.slotAllUnits );
+            
+      }
+  
+      await new Promise( ( resolve ) => setTimeout( resolve, 1000 ) );
+      this.actionDone = true;
+    }
 
+    async attackAll( opponents, identificator ) {
+      
+      let elemActiveUnit = this._elem.querySelector( `.${this.activeUnit.position}` ); // элемент для дальнейшей замены на анимацию атаки
+      let coordsActiveUnit = styleImage( this.activeUnit.unitAttack.size[0], this.activeUnit.unitAttack.size[1] );
+      let elemField = this._elem.querySelector( `.field_allAttack_pl${identificator[1]}` ); // элемент для поля опонента для урона по всем
+      let coordsField = styleImageAll( this.activeUnit.unitAllAttack.size[0], this.activeUnit.unitAllAttack.size[1] );
+      // загружаем звук атаки юнита
+      const audio = new Audio();
+      audio.src = `${this.activeUnit.unitAttackSound}`; 
+      audio.autoplay = true;
+      // загружаем отцентрованную анимацию атаки юнита
+      elemActiveUnit.setAttribute( 'src', `${this.activeUnit.unitAttack.path}` );
+      elemActiveUnit.style.position = 'absolute';
+      elemActiveUnit.style.left = coordsActiveUnit[0] + 'px';
+      elemActiveUnit.style.top = coordsActiveUnit[1] + 'px';
+      await new Promise( ( resolve ) => setTimeout( resolve, 1000 ) ); // ждем 1/4 удара, чтобы вставить анимашку в середине атаки
+      
+      for( let opponent of opponents ) {
+
+        if( opponent !== 'transfer') {
+          
+          let damage = this.activeUnit.damage - Math.floor( ( this.activeUnit.damage * opponent.currentArmor / 100 ) );
+          let magicalDamage = this.activeUnit.magicalDamage - Math.floor( (this.activeUnit.magicalDamage * opponent.currentMagicalDefense / 100 ) );
+          opponent.currentHealth -= ( damage + magicalDamage );
         }
+      }
 
+      elemField.setAttribute( 'src', `${this.activeUnit.unitAllAttack.path}` );
+      elemField.style.position = 'absolute';
+      elemField.style.left = coordsField[0] + 'px';
+      elemField.style.top = coordsField[1] + 'px';
+
+      await new Promise( ( resolve ) => setTimeout( resolve, 1500 ) ); // ждем оставшуюся часть анимации атаки
+
+      // загружаем отцентрованную анимацию статики юнита который атаковал и убираем анимацию атаки по полю
+      let elementActiveUnit = this._elem.querySelector( `.${this.activeUnit.position}` );
+      let coordsAttackUnit = styleImage( this.activeUnit.unitStatic.size[0], this.activeUnit.unitStatic.size[1] );
+      elemActiveUnit.style = '';
+      elemField.setAttribute( 'src', '' );
+      elementActiveUnit.setAttribute( 'src', `${this.activeUnit.unitStatic.path}` );
+      elementActiveUnit.style.position = 'absolute';
+      elementActiveUnit.style.left = coordsAttackUnit[0] + 'px';
+      elemActiveUnit.style.top = coordsAttackUnit[1] + 'px';
+      elemField.style = '';
+
+      for( let soldier of this.slotPlayer1 ) { // проверяем слот игрока есть ли мертвые юниты
+                  
+        if( soldier !== 'transfer' ) this.checkUnitLive( soldier, this.slotPlayer1, this.slotAllUnits );
+      
+      }
+            
+      for( let soldier of this.slotPlayer2 ) {
+                
+        if( soldier !== 'transfer' ) this.checkUnitLive( soldier, this.slotPlayer2, this.slotAllUnits );
+            
+      }
+  
+      await new Promise( ( resolve ) => setTimeout( resolve, 500 ) );
+      this.actionDone = true;
     }
 
-    endFight = () => {
-
-        this.mainContainer.innerHTML = '';
-        console.log( 'Nobody win' );
-
-    }
 
     get elem() {
 
@@ -542,5 +581,3 @@ export default class CombatWin {
     }
 
 }
-
-

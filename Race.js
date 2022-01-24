@@ -1,64 +1,22 @@
 "use strict";
 
 import CaptainsWindow from './captain.js';
-import { createElem, races, soundsMenu } from './lib.js';
+import { createElem, races, soundsMenu, contentArray } from './lib.js';
 
 
 export default class SecondWin {
 
     constructor() {
 
-        this.races = races;
-        const elem = createElem( `<div class="race big_container">
-        <div class="first_player">
-            <div class="modal_pl1"></div>
-            <div class="name fpl">
-                <div class="pl1 phrase">Player 1</div>
-                <input type="text" class="input_name plf" name="first_player" placeholder="Artur_1">
-            </div>
-            <div class="race_description plr1">
-                <div class="map left"></div>
-            </div>
-            <div class="choose fplr">
-                <a href="#" class="btn_op">Confirm</a>
-            </div>
-        </div>
-        <div class="race_menu">
-            <div class="races">
-                <div class="name_game">Command Combat</div>
-                <div class="emblem"></div>
-            </div>
-            <div class="race_inner"></div>
-            <div class="race_arrows">
-                <div class="race_arrow_left">
-                    <img src="./img/arrow_left.png" alt="icon_arrow_left">
-                </div>
-                <div class="race_choose phrase">choose race</div>
-                <div class="race_arrow_right">
-                    <img src="./img/arrow_right.png" alt="icon_arrow_right">
-                </div>
-            </div>
-        </div>
-        <div class="second_player">
-            <div class="modal_pl2 disabled_pl2"></div>
-            <div class="name spl">
-                <div class="pl2 phrase">Player 2</div>
-                <input type="text" class="input_name pls" name="second_player" placeholder="Lancelot_5">
-            </div>
-            <div class="race_description plr2">
-                <div class="map right"></div>
-            </div>
-            <div class="choose splr">
-                <a href="#" class="btn_op">Confirm</a>
-            </div>
-        </div>
-    </div>` );
+    this.races = races;
+    //вставляем верстку
+    const elem = createElem( `${contentArray.raceWin}` );
     
     this.inner = elem.querySelector( '.race_inner' );
     this.raceDescriptionLeft = elem.querySelector( '.left' );
     this.raceDescriptionRight = elem.querySelector( '.right' );
     
-    // fill slider with slides 
+    // Наполняем слайдер слайдами для каждой рассы 
     for( let race of this.races ) {
         let leftRaceDescription = createElem( `<div class="description_text">${race.description}</div>` );
         let rightRaceDescription = createElem( `<div class="description_text">${race.description}</div>` );
@@ -71,11 +29,12 @@ export default class SecondWin {
         this.inner.append( raceSlide );
     }
 
+    // добавляем контент в документ
     this.mainContainer = document.querySelector( '.main_container' );
     this.mainContainer.append( elem );
     this._elem = elem;
 
-    // start settings
+    // задаем первоначальные настройки отображения слайдера
     this.arrowLeft = this._elem.querySelector( '.race_arrow_left' );
     this.arrowRight = this._elem.querySelector( '.race_arrow_right' );
     this.arrowLeft.style.display = 'none';
@@ -83,7 +42,7 @@ export default class SecondWin {
     this.raceSlides = this._elem.querySelectorAll( '.race_slide ');
     this.raceSlides[0].classList.add( 'active_race' );
 
-    // hang handlers on elements
+    // вешаем обработчики на стрелки, кнопки и поля для ввода имени
     const raceArrows = this._elem.querySelector( '.race_arrows' );
     const firstPlayerConfirm = this._elem.querySelector( '.fplr' );
     const secondPlayerConfirm = this._elem.querySelector( '.splr' );
@@ -101,12 +60,13 @@ export default class SecondWin {
     
     }
 
+    // при наведении на поле ввода имени получаем подсказку по формату ввода
     giveHint = ( event ) => {
 
         let target = event.target;
         const tooltip = document.createElement( 'div' );
         tooltip.className = 'tooltip';
-        tooltip.innerHTML = 'Enter nickname in format: -from 5 characters to 14, -latin, numbers and _';
+        tooltip.innerHTML = 'Введите никнейм в формате: -от 5 до 14 символов, -латиница, числа и _';                     
 
         tooltip.style.left = target.getBoundingClientRect().left + 'px';
         tooltip.style.top = target.getBoundingClientRect().bottom + 5 + 'px';
@@ -114,6 +74,7 @@ export default class SecondWin {
 
     }
 
+    // скрываем подсказку при покидании поля ввода
     hideHint = () => {
 
         let tooltip = document.querySelector( '.tooltip' );    
@@ -121,15 +82,20 @@ export default class SecondWin {
 
     }
 
+    // проверяем введенный nickname на соответсвие формату для первого игрока
     checkInputFirst = ( event ) => {
         
         const target = event.target;
         const res = /[a-zA-Z0-9_]{5,14}/.test( this.nickFirstPlayer.value );
         if( !res ) {
-
+            // вставляем звук ошибки
+            const audio = new Audio();
+            audio.src = `${soundsMenu.errorAlarm}`; 
+            audio.autoplay = true;
+            // если не соответсвует формату, очищаем поле и выводим сообщение о некорректном вводе
             const mistake = document.createElement( 'div' );
             mistake.className = 'tooltip_mistake';
-            mistake.innerHTML = 'incorrect format';
+            mistake.innerHTML = 'формат некорректен';
             mistake.style.left = target.getBoundingClientRect().right + 5 + 'px';
             mistake.style.top = target.getBoundingClientRect().top + 'px';
             document.body.append( mistake );
@@ -142,15 +108,20 @@ export default class SecondWin {
     
     }
 
+    // проверяем введенный nickname на соответсвие формату для второго игрока
     checkInputSecond = ( event ) => {
         
         const target = event.target;
         const res = /[a-zA-Z0-9_]{5,14}/.test( this.nickSecondPlayer.value );
         if( !res ) {
-
+            // вставляем звук ошибки
+            const audio = new Audio();
+            audio.src = `${soundsMenu.errorAlarm}`; 
+            audio.autoplay = true;
+            // если не соответсвует формату, очищаем поле и выводим сообщение о некорректном вводе
             const mistake = document.createElement( 'div' );
             mistake.className = 'tooltip_mistake';
-            mistake.innerHTML = 'incorrect format';
+            mistake.innerHTML = 'формат некорректен';
             mistake.style.left = target.getBoundingClientRect().left - 170 + 'px';
             mistake.style.top = target.getBoundingClientRect().top + 'px';
             document.body.append( mistake );
@@ -163,16 +134,21 @@ export default class SecondWin {
     
     }
 
-    // arrows switch method
+    // переключатель слайдов по нажатию на стрелки
     clicker = ( event ) => {
 
         let target = event.target;
 
-        // get sizes of containers for description and slide
+        // получаем размер контейнеров для описания расы и слайда для картинки
         const stepX = this.inner.offsetWidth;
         const stepY = this.raceDescriptionLeft.offsetHeight;
-            
+
+        // проверяем какая стрелка нажата и двигаем слайды и описание
         if( target.closest( '.race_arrow_right' ) ) {
+            // вставляем звук для стрелки
+            const audio = new Audio();
+            audio.src = `${soundsMenu.arrowClick}`; 
+            audio.autoplay = true;
             this.inner.style.transform = `translateX(-${stepX*this.position}px)`;
             this.raceDescriptionLeft.style.transform = `translateY(-${stepY*this.position}px)`;
             this.raceDescriptionRight.style.transform = `translateY(-${stepY*this.position}px)`;
@@ -180,12 +156,17 @@ export default class SecondWin {
         }
             
         if( target.closest( '.race_arrow_left' ) ) {
+            // вставляем звук для стрелки
+            const audio = new Audio();
+            audio.src = `${soundsMenu.arrowClick}`; 
+            audio.autoplay = true;
             this.inner.style.transform = `translateX(-${stepX*(this.position-2)}px)`;
             this.raceDescriptionLeft.style.transform = `translateY(-${stepY*(this.position-2)}px)`;
             this.raceDescriptionRight.style.transform = `translateY(-${stepY*(this.position-2)}px)`;
             this.position -= 1;
         }
         
+        // отображаем/скрываем стрелки в зависимости от позиции и ставим маркер отображаемой рассе
         switch ( this.position ) {
             case 1:
             this.arrowLeft.style.display = 'none';
@@ -218,46 +199,72 @@ export default class SecondWin {
         
     }
 
+    // первый игрок подтверждает выбор расы
     player1confirm = () => {
 
-        // paste sound for button
+        // вставляем звук для кнопки
         const audio = new Audio();
         audio.src = `${soundsMenu.buttonClickStart}`; 
         audio.autoplay = true;
         
-        // switcher of modal window between players 
+        // скрываем информацию для первого игрока и разблокируем для второго
         const modalPl1 = this._elem.querySelector( '.modal_pl1' );
         const modalPl2 = this._elem.querySelector( '.modal_pl2' );
         modalPl2.classList.remove( 'disabled_pl2' );
         modalPl1.classList.add( 'disabled_pl1' );
-        const activeRace = this._elem.querySelector( '.active_race' );
+        this.activeRace = this._elem.querySelector( '.active_race' );
         if( this.nickFirstPlayer.value == '' ) this.nickFirstPlayer.value = 'Artur_1';
 
         const configFirstPlayer = {
             nickname: this.nickFirstPlayer.value,
-            race: activeRace.dataset.id
+            race: this.activeRace.dataset.id
         };
+        // сохраняем конфигурацию первого игрока в LocalStorage
         let jsonconfig = JSON.stringify( configFirstPlayer );
         localStorage.setItem( 'configFirstPlayer', jsonconfig );
 
     }
 
-    player2confirm = () => {
+    // второй игрок подтверждает выбор расы
+    player2confirm = ( event ) => {
 
-         // paste sound for button
+        const target = event.target;
+        const activeRace = this._elem.querySelector( '.active_race' );
+        
+        // проверяем незанята ли выбранная раса, если занята предлагаем выбрать другую
+        if( activeRace.dataset.id === this.activeRace.dataset.id ) {
+
+            // вставляем звук ошибки
+            const audio = new Audio();
+            audio.src = `${soundsMenu.errorAlarm}`; 
+            audio.autoplay = true;
+            const mistake = document.createElement( 'div' );
+            mistake.className = 'tooltip';
+            mistake.innerHTML = 'Эта раса уже занята, выберите другую расу!';
+            mistake.style.left = target.getBoundingClientRect().left + 'px';
+            mistake.style.top = target.getBoundingClientRect().top - 100 + 'px';
+            document.body.append( mistake );
+            setTimeout( () => mistake.remove(), 1500 );
+            return;
+
+        }
+
+        // вставляем звук для кнопки
         const audio = new Audio();
         audio.src = `${soundsMenu.buttonClickStart}`; 
         audio.autoplay = true; 
 
-        const activeRace = this._elem.querySelector( '.active_race' );
+        // если игрок забыл ввести nickname вставляем имя по умолчанию
         if( this.nickSecondPlayer.value == '' ) this.nickSecondPlayer.value = 'Lancelot_5';
         const configSecondPlayer = {
             nickname: this.nickSecondPlayer.value,
             race: activeRace.dataset.id
         };
+        // сохраняем конфигурацию второго игрока в LocalStorage
         const jsonconfig = JSON.stringify( configSecondPlayer );
         localStorage.setItem( 'configSecondPlayer', jsonconfig );
 
+        // переходим к окну выбора капитана
         this.mainContainer.innerHTML = '';
         const captainsPlayers = new CaptainsWindow();
 
