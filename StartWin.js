@@ -17,13 +17,15 @@ export default class StartWindow {
         startBtn.addEventListener( 'click', this.start );
         exitBtn.addEventListener( 'click', this.close );
 
+        this.soundMenu = new Audio();
+        this.soundMenu.autoplay = true;
+
     }
 
     start = () => {
 
-        const audio = new Audio(); // создаем новый аудио элемент
-        audio.src = `${soundsMenu.buttonClickStart}`; 
-        audio.autoplay = true;
+        // запускаем аудио элемента
+        this.soundMenu.src = `${soundsMenu.buttonClickStart}`; 
 
         const mainContainer = document.querySelector( '.main_container' );
         
@@ -37,9 +39,8 @@ export default class StartWindow {
 
     close = () => {
 
-        const audio = new Audio(); // создаем новый аудиоэлемент
-        audio.src = `${soundsMenu.buttonClickEnd}`; 
-        audio.autoplay = true;
+        // запускаем аудио элемента
+        this.soundMenu.src = `${soundsMenu.buttonClickEnd}`;
 
         // При нажатии кнопки Exit очищаем страницу
         setTimeout( () => {

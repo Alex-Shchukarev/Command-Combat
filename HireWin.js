@@ -33,9 +33,11 @@ export default class HireWindow {
 
     // получаем расу первого игрока для загрузки массива юнитов и музыки
     this.getArrayUnits( this.configFirstPlayer.race );
-    const audio = new Audio();
-    audio.src = `${musicHireWindow[this.raceUnits]}`; 
-    audio.autoplay = true;
+    this.soundsHire = new Audio();
+    this.soundsHire.autoplay = true;
+    this.musicHire = new Audio();
+    this.musicHire.autoplay = true;
+    this.musicHire.src = `${musicHireWindow[this.raceUnits]}`;
 
     // заполняем слайдеры слайдами 
     for( let unit of this.listUnits[this.raceUnits] ) {
@@ -91,9 +93,7 @@ export default class HireWindow {
             
         if( target.closest( '.down_arrow' ) ) {
             // вставляем звук для стрелки
-            const audio = new Audio();
-            audio.src = `${soundsMenu.arrowClick}`; 
-            audio.autoplay = true;
+            this.soundsHire.src = `${soundsMenu.arrowClick}`;
             for( let item of this.infoInner ) {
                 item.style.transform = `translateY(-${stepYinfo*this.position}px)`;
             }
@@ -105,9 +105,7 @@ export default class HireWindow {
             
         if( target.closest( '.up_arrow' ) ) {
             // вставляем звук для стрелки
-            const audio = new Audio();
-            audio.src = `${soundsMenu.arrowClick}`; 
-            audio.autoplay = true;
+            this.soundsHire.src = `${soundsMenu.arrowClick}`;
             for( let item of this.infoInner ) {
                 item.style.transform = `translateY(-${stepYinfo*(this.position-2)}px)`;
             }
@@ -213,9 +211,7 @@ export default class HireWindow {
         }
         else if( this.currentDroppable.closest( '.droppable' ) ) {
             // вставляем звук установки иконки
-            const audio = new Audio();
-            audio.src = `${soundsMenu.hireSetUnit}`; 
-            audio.autoplay = true;
+            this.soundsHire.src = `${soundsMenu.hireSetUnit}`;
 
             target.removeAttribute( 'style' ); // удаляем позиционирование у цели
             this.currentDroppable.insertAdjacentHTML( 'beforeend', `${target.outerHTML}` ); 
@@ -273,9 +269,7 @@ export default class HireWindow {
     collectCommand = () => {
 
         // добавляем звук нажатия кнопки найма
-        const audio = new Audio();
-        audio.src = `${soundsMenu.buttonClickStart}`; 
-        audio.autoplay = true;
+        this.soundsHire.src = `${soundsMenu.buttonClickStart}`;
 
         // проверяем кокому игроку нужно собрать конфигурацию
         if( this.counter == 1 ) {
@@ -309,9 +303,7 @@ export default class HireWindow {
 
             // получаем расу второго игрока для загрузки массива юнитов и музыки
             this.getArrayUnits( this.configSecondPlayer.race );
-            const music = new Audio();
-            music.src = `${musicHireWindow[this.raceUnits]}`; 
-            music.autoplay = true;
+            this.musicHire.src = `${musicHireWindow[this.raceUnits]}`;
 
             // очистка компонент после первого игрока и потом заполняем их данными о юнитах второго игрока
             this.iconsSlider.innerHTML = '';
@@ -362,6 +354,7 @@ export default class HireWindow {
             localStorage.setItem( 'configSecondPlayer', jsonconfig );
 
             // очищаем главный контейнер и переходим к следующему окну
+            this.musicHire.autoplay = false;
             this.mainContainer.innerHTML = '';
             const combatPlayers = new ModalWin2();
 

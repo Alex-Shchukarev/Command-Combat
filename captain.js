@@ -68,6 +68,9 @@ export default class CaptainsWindow {
         this.firstPlayerButton.addEventListener( 'click', this.player1Captain );
         this.secondPlayerButton.addEventListener( 'click', this.player2Captain );
 
+        this.soundCap = new Audio();
+        this.soundCap.autoplay = true;
+
     }
 
     // переключатель для отображения информации капитана
@@ -76,23 +79,19 @@ export default class CaptainsWindow {
         const target = event.target;
         let race = getConfigArray( this.currentRace );
         // вставляем звук для клика по иконке
-        const audio = new Audio();
-        audio.src = `${soundsMenu.captainChoose}`;
+        this.soundCap.src = `${soundsMenu.captainChoose}`;
         const voiceCaptain = new Audio();
         voiceCaptain.autoplay = true;
         
         if( target.closest( '[data-id="0"] img' ) ) { 
             this.captainId = 0;
             voiceCaptain.src = `${soundsCaptains[race][0]}`;
-            audio.autoplay = true;
         } else if( target.closest( '[data-id="1"] img' ) ) {
             this.captainId = 1;
             voiceCaptain.src = `${soundsCaptains[race][1]}`;
-            audio.autoplay = true;
         } else if( target.closest( '[data-id="2"] img' ) ) {
             this.captainId = 2;
             voiceCaptain.src = `${soundsCaptains[race][2]}`;
-            audio.autoplay = true;
         } else return;
 
         for( let ava of this.listCaptain ) ava.classList.remove( this.thumb );
@@ -113,9 +112,7 @@ export default class CaptainsWindow {
     player1Captain = () => {
 
         // вставляем звук для кнопки
-        const audio = new Audio();
-        audio.src = `${soundsMenu.buttonClickStart}`; 
-        audio.autoplay = true;
+        this.soundCap.src = `${soundsMenu.buttonClickStart}`;
 
         // сохраняем конфигурацию для первого игрока
         const firstPlayerConfig = {
@@ -185,9 +182,7 @@ export default class CaptainsWindow {
     player2Captain = () => {
 
         // вставляем звук для кнопки
-        const audio = new Audio();
-        audio.src = `${soundsMenu.buttonClickStart}`; 
-        audio.autoplay = true;
+        this.soundCap.src = `${soundsMenu.buttonClickStart}`;
 
         // сохраняем конфигурацию для второго игрока
         const secondPlayerConfig = {

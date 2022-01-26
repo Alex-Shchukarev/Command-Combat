@@ -102,7 +102,7 @@ export default class CombatWin {
         let elem = this.combatModels[this.configFirstPlayer.race]; // получаем массив моделей расы 1го игрока
         let soundsUnits = this.soundsUnits[this.idRacePlayer1]; // получаем массив звуков моделей юнитов 1го игрока
         let animationDate = elem[ Number( item[10] ) ].left; // выбираем вариант расположения слева так как игрок_1
-        let soundUnit = [ soundsUnits[ Number( item[10] ) ], soundsUnits[0] ]; // получаем звук для конкретного юнита
+        let soundUnit = [ soundsUnits[ Number( item[10] ) ][0], soundsUnits[ Number( item[10] ) ][1] ]; // получаем звук для конкретного юнита
         let url = animationDate[0].path; // получаем ссылку на анимацию юнита в состоянии покоя
         let leftCoord = animationDate[0].size[0]; // получаем ширину анимации
         let topCoord = animationDate[0].size[1]; // получаем высоту анимации
@@ -129,7 +129,7 @@ export default class CombatWin {
         let elem = this.combatModels[this.configSecondPlayer.race];
         let soundsUnits = this.soundsUnits[this.idRacePlayer2];
         let animationDate = elem[ Number( item[10] ) ].right;
-        let soundUnit = [ soundsUnits[ Number( item[10] ) ], soundsUnits[0] ];
+        let soundUnit = [ soundsUnits[ Number( item[10] ) ][0], soundsUnits[ Number( item[10] ) ][1] ];
         let url = animationDate[0].path;
         let leftCoord = animationDate[0].size[0];
         let topCoord = animationDate[0].size[1];
@@ -170,8 +170,10 @@ export default class CombatWin {
       this.buttonPanel.addEventListener( 'click', this.clickButton );
       this.fieldMain.addEventListener( 'pointerover', this.overTarget );
       this.fieldMain.addEventListener( 'pointerout', this.leaveTarget );
-      console.log(this.slotConfigsPlayer2);
-      console.log(this.slotAllUnits);
+      this.menuSound = new Audio();
+      this.menuSound.autoplay = true;
+      this.soundOneUnitAttack = new Audio();
+      this.soundOneUnitAttack.autoplay = true;
 
     }
 
@@ -187,10 +189,7 @@ export default class CombatWin {
     // убираем заставку перед боем и запускаем функцию пошаговых ходов
     startFight = () => {
       // вставляем звук начала боя
-      const audio = new Audio();
-      audio.src = `${soundsMenu.startBattle}`; 
-      audio.autoplay = true;
-
+      this.menuSound.src = `${soundsMenu.startBattle}`;
       this.modalWindow.classList.remove( 'loading' );
       this.modalWindow.remove();
       this.doAction();
@@ -201,7 +200,7 @@ export default class CombatWin {
 
       const target = event.target;
       if( target.closest( '.button_defend' ) ) { // если нажата кнопка защита
-        
+        this.menuSound.src = `${soundsMenu.combatDefend}`;
         // находим объект активного юнита и уставливаем ему защиту     
         let unit = this._elem.querySelector( '.active_unit' );
         let flag = unit.closest( 'li' ).dataset.id;
@@ -215,27 +214,23 @@ export default class CombatWin {
         let unit = this._elem.querySelector( '.active_unit' ); 
         let flag = unit.closest( 'li' ).dataset.id;
         this.slotAllUnits.forEach( ( item, index ) => { if( item.position === flag ) indeks = index; } );
-        console.log(indeks);
         if( indeks === lengthSlot ) { // если юнит последний в очереди на ход, то отменяем ожидание
 
           return;
 
         } else {
           // загружаем звук ожидания
-          const audio = new Audio();
-          audio.src = `${soundsMenu.combatWait}`; 
-          audio.autoplay = true;
+          this.menuSound.src = `${soundsMenu.combatWait}`;
           // вставляем заглушку на место юнита в очереди и переносим его в конец очереди
           let removeElem = this.slotAllUnits.splice( indeks, 1, 'transfer' );
-          console.log(removeElem);
           this.slotAllUnits.push( ...removeElem );
-          console.log(this.slotAllUnits);
 
         }
         
         this.actionDone = true;
 
       } else if( target.closest( '.button_nobody' ) ) { // если нажата кнопка ничья
+        this.menuSound.src = `${soundsMenu.nobodyWin}`;
         // вставляем окно завершения сражения с кнопками конец и новая игра
         const container = this._elem.querySelector( '.container' );
         container.insertAdjacentHTML( 'afterbegin', '<div class="finish_window"></div>' );
@@ -254,14 +249,6 @@ export default class CombatWin {
       this.mainContainer.innerHTML = '';
 
     }
-    
-    // вешаем обработчик подсвеченному юниту, как потенциальной цели
-    // getTarget = () => {
-
-    //   this.activeTarget = this._elem.querySelector( '.active_target' );
-    //   this.activeTarget.addEventListener( 'click', this.catchTarget );
-
-    // }
 
     // получаем слот игрока - опонента
     chooseSlot = ( identificator ) => {
@@ -406,7 +393,7 @@ export default class CombatWin {
 
     }
 
-    // реализация очереди пошаговых ходов 
+    // реализация очереди пошаговых раундов 
     async doAction() {
 
       leaveFight: while( !slotUnitsEmpty( this.slotPlayer1 ) && !slotUnitsEmpty( this.slotPlayer2 ) ) { // проверка не пусты ли слоты
@@ -414,8 +401,7 @@ export default class CombatWin {
         setStartSettings( this.slotAllUnits ); // устанавливаем броню в стартовые значения
         queueUnits( this.slotAllUnits ); // очередь приоритета ходов юнитов
         for( let unit of this.slotAllUnits ) {
-          console.log(this.slotAllUnits, unit);
-          if( !unit.kind ) continue; // проверка юнит это или нет
+          if( unit === 'transfer' ) continue; // проверка юнит это или нет
           // добавляем юниту и его иконке подсветку
           let elemUnit = this._elem.querySelector( `.${unit.position}` ); 
           let iconUnit = this._elem.querySelector( `.i_${unit.position}` );
@@ -455,15 +441,13 @@ export default class CombatWin {
       let coordsActiveUnit = styleImage( this.activeUnit.unitAttack.size[0], this.activeUnit.unitAttack.size[1] );
       let elemActiveTarget = this._elem.querySelector( `.${opponents[0].position}` ); // элемент для дальнейшей замены на анимацию получения урона
       let coordsActiveTarget = styleImage( opponents[0].unitGetDam.size[0], opponents[0].unitGetDam.size[1] );
-      // загружаем звук атаки юнита
-      const audio = new Audio();
-      audio.src = `${this.activeUnit.unitAttackSound}`; 
-      audio.autoplay = true;
       // загружаем отцентрованную анимацию атаки юнита
       elemActiveUnit.setAttribute( 'src', `${this.activeUnit.unitAttack.path}` );
       elemActiveUnit.style.position = 'absolute';
       elemActiveUnit.style.left = coordsActiveUnit[0] + 'px';
       elemActiveUnit.style.top = coordsActiveUnit[1] + 'px';
+      // загружаем звук атаки юнита
+      this.soundOneUnitAttack.src = `${this.activeUnit.unitAttackSound}`;
       await new Promise( ( resolve ) => setTimeout( resolve, 2000 ) ); // ждем 2/3 удара, чтобы цель поменяла анимашку в середине атаки
       
       for( let opponent of opponents ) {
@@ -519,9 +503,7 @@ export default class CombatWin {
       let elemField = this._elem.querySelector( `.field_allAttack_pl${identificator[1]}` ); // элемент для поля опонента для урона по всем
       let coordsField = styleImageAll( this.activeUnit.unitAllAttack.size[0], this.activeUnit.unitAllAttack.size[1] );
       // загружаем звук атаки юнита
-      const audio = new Audio();
-      audio.src = `${this.activeUnit.unitAttackSound}`; 
-      audio.autoplay = true;
+      this.soundOneUnitAttack.src = `${this.activeUnit.unitAttackSound}`;
       // загружаем отцентрованную анимацию атаки юнита
       elemActiveUnit.setAttribute( 'src', `${this.activeUnit.unitAttack.path}` );
       elemActiveUnit.style.position = 'absolute';

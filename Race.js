@@ -57,6 +57,9 @@ export default class SecondWin {
     raceArrows.addEventListener( 'click', this.clicker );
     firstPlayerConfirm.addEventListener( 'click', this.player1confirm );
     secondPlayerConfirm.addEventListener( 'click', this.player2confirm ); 
+
+    this.sounds = new Audio();
+    this.sounds.autoplay = true;
     
     }
 
@@ -89,9 +92,7 @@ export default class SecondWin {
         const res = /[a-zA-Z0-9_]{5,14}/.test( this.nickFirstPlayer.value );
         if( !res ) {
             // вставляем звук ошибки
-            const audio = new Audio();
-            audio.src = `${soundsMenu.errorAlarm}`; 
-            audio.autoplay = true;
+            this.sounds.src = `${soundsMenu.errorAlarm}`; 
             // если не соответсвует формату, очищаем поле и выводим сообщение о некорректном вводе
             const mistake = document.createElement( 'div' );
             mistake.className = 'tooltip_mistake';
@@ -115,9 +116,7 @@ export default class SecondWin {
         const res = /[a-zA-Z0-9_]{5,14}/.test( this.nickSecondPlayer.value );
         if( !res ) {
             // вставляем звук ошибки
-            const audio = new Audio();
-            audio.src = `${soundsMenu.errorAlarm}`; 
-            audio.autoplay = true;
+            this.sounds.src = `${soundsMenu.errorAlarm}`;
             // если не соответсвует формату, очищаем поле и выводим сообщение о некорректном вводе
             const mistake = document.createElement( 'div' );
             mistake.className = 'tooltip_mistake';
@@ -146,9 +145,7 @@ export default class SecondWin {
         // проверяем какая стрелка нажата и двигаем слайды и описание
         if( target.closest( '.race_arrow_right' ) ) {
             // вставляем звук для стрелки
-            const audio = new Audio();
-            audio.src = `${soundsMenu.arrowClick}`; 
-            audio.autoplay = true;
+            this.sounds.src = `${soundsMenu.arrowClick}`;
             this.inner.style.transform = `translateX(-${stepX*this.position}px)`;
             this.raceDescriptionLeft.style.transform = `translateY(-${stepY*this.position}px)`;
             this.raceDescriptionRight.style.transform = `translateY(-${stepY*this.position}px)`;
@@ -157,9 +154,7 @@ export default class SecondWin {
             
         if( target.closest( '.race_arrow_left' ) ) {
             // вставляем звук для стрелки
-            const audio = new Audio();
-            audio.src = `${soundsMenu.arrowClick}`; 
-            audio.autoplay = true;
+            this.sounds.src = `${soundsMenu.arrowClick}`;
             this.inner.style.transform = `translateX(-${stepX*(this.position-2)}px)`;
             this.raceDescriptionLeft.style.transform = `translateY(-${stepY*(this.position-2)}px)`;
             this.raceDescriptionRight.style.transform = `translateY(-${stepY*(this.position-2)}px)`;
@@ -203,9 +198,7 @@ export default class SecondWin {
     player1confirm = () => {
 
         // вставляем звук для кнопки
-        const audio = new Audio();
-        audio.src = `${soundsMenu.buttonClickStart}`; 
-        audio.autoplay = true;
+        this.sounds.src = `${soundsMenu.buttonClickStart}`;
         
         // скрываем информацию для первого игрока и разблокируем для второго
         const modalPl1 = this._elem.querySelector( '.modal_pl1' );
@@ -235,9 +228,7 @@ export default class SecondWin {
         if( activeRace.dataset.id === this.activeRace.dataset.id ) {
 
             // вставляем звук ошибки
-            const audio = new Audio();
-            audio.src = `${soundsMenu.errorAlarm}`; 
-            audio.autoplay = true;
+            this.sounds.src = `${soundsMenu.errorAlarm}`;
             const mistake = document.createElement( 'div' );
             mistake.className = 'tooltip';
             mistake.innerHTML = 'Эта раса уже занята, выберите другую расу!';
@@ -250,9 +241,7 @@ export default class SecondWin {
         }
 
         // вставляем звук для кнопки
-        const audio = new Audio();
-        audio.src = `${soundsMenu.buttonClickStart}`; 
-        audio.autoplay = true; 
+        this.sounds.src = `${soundsMenu.buttonClickStart}`; 
 
         // если игрок забыл ввести nickname вставляем имя по умолчанию
         if( this.nickSecondPlayer.value == '' ) this.nickSecondPlayer.value = 'Lancelot_5';
