@@ -156,8 +156,20 @@ export default class CombatWin {
       // загружаем заставку перед началом боя
       this.modalWindow = this._elem.querySelector( '.modal' );
       this.modalWindow.classList.add( 'loading' );
-      const buttonFight = createElem( `<a href="#" class="btn_op">Начать Бой</a>` );
-      this.modalWindow.append( buttonFight );
+      const preloaderFight = createElem( `<div class="loading">
+      <div class="header_result">
+        <div class="name_game">Command Combat</div><div class="emblem"></div>
+      </div>
+      <div class="winner_info">
+        <div class="info_congratulation"><p>Да начнется битва и пусть победит сильнейший!</p></div>
+      </div>
+      <div class="footer_result">
+        <ul class="menu_result">
+          <li class="start_combat"><a href="#" class="btn_op">НАЧАТЬ БОЙ</a></li></ul>
+      </div>
+    </div>` );
+      this.modalWindow.append( preloaderFight );
+      const buttonFight = this.modalWindow.querySelector( '.start_combat' );
       buttonFight.addEventListener( 'click', this.startFight );
 
       // формируем слоты экземпляры объектов юнитов для каждого игрока и общий слот всех юнитов
@@ -193,7 +205,7 @@ export default class CombatWin {
     startFight = () => {
       // вставляем звук начала боя
       this.menuSound.src = `${soundsMenu.startBattle}`;
-      this.modalWindow.classList.remove( 'loading' );
+      this.modalWindow.innerHTML = '';
       this.modalWindow.remove();
       this.doAction();
 

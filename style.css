@@ -1297,10 +1297,8 @@ a:hover {
     height: 669px;
     width: 964px;
     z-index: 700;
-    background: url('./img/race_modal_pl2.jpg');
-    filter: grayscale(0.7);
-    opacity: 0.6;
-    margin-bottom: 30px;
+    background: url('./img/fone_nobody.jpg');
+    margin-bottom: 50px;
 }
 
 .active_unit {
@@ -1317,7 +1315,6 @@ a:hover {
     height: 669px;
     width: 964px;
     background: url('./img/fone_final.jpg');
-    filter: grayscale(0.7);
 }
 
 .menu_final {
