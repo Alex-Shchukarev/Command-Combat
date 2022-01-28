@@ -1,6 +1,6 @@
 "use strict";
 
-import { Unit, Mag } from "./Units.js";
+import { Unit, Mag, Priest, Vampire } from "./Units.js";
 
 export function createElem( html ) {
 
@@ -159,7 +159,7 @@ const empireListCaptain = [
     У него большой опыт в боях, крепкая хватка и отличное владение оружием.`,
     avatar: 'empire_cavalry.png',
     id: 0,
-    characteristics: [ '200', '50', '40', '0', '20', '0', '1', 'ближняя' ] },
+    characteristics: [ '200', '50', '50', '0', '20', '0', '1', 'ближняя' ] },
 
     { name: 'Архимаг Империи',
     portrait: 'ava_empire_archimag.png',
@@ -167,7 +167,7 @@ const empireListCaptain = [
     все секреты магии, маг становится архимагом. Архимаги стоят на защите человеческой империи от темных сил.`,
     avatar: 'empire_archimag.png',
     id: 1,
-    characteristics: [ '120', '40', '0', '20', '20', '0', '6', 'дальняя' ] },
+    characteristics: [ '120', '40', '0', '25', '20', '0', '6', 'дальняя' ] },
 
     { name: 'Командир Королевских Рейнджеров',
     portrait: 'ava_empire_ranger.png',
@@ -175,7 +175,7 @@ const empireListCaptain = [
     которые возглавляют отряды и гильдии. Огненные стрелы, выпущенные рукой королевского рейнджера, всегда попадают в цель.`,
     avatar: 'empire_ranger.png',
     id: 2,
-    characteristics: [ '150', '60', '30', '0', '20', '0', '1', 'дальняя' ] }
+    characteristics: [ '150', '60', '40', '0', '20', '0', '1', 'дальняя' ] }
 ];
 
 let jsonconfig = JSON.stringify( empireListCaptain );
@@ -188,7 +188,7 @@ const demonsListCaptain = [
     легионом демонов и веками ждет подходящего момента, когда сможет нанести смертельный удар.`,
     avatar: 'demons_duke.png',
     id: 0,
-    characteristics: [ '250', '50', '40', '0', '0', '0', '1', 'ближняя' ] },
+    characteristics: [ '250', '50', '50', '0', '0', '0', '1', 'ближняя' ] },
 
     { name: 'Графиня Адского Культа',
     portrait: 'ava_demons_countess.png',
@@ -196,7 +196,7 @@ const demonsListCaptain = [
     Там она сможет постичь все тонкости демонической магии и подчерпнуть силу у огненной гиены.`,
     avatar: 'demons_countess.png',
     id: 1,
-    characteristics: [ '150', '40', '0', '20', '0', '0', '6', 'дальняя' ] },
+    characteristics: [ '150', '40', '0', '25', '0', '0', '6', 'дальняя' ] },
 
     { name: 'Повелитель Орд Гнева',
     portrait: 'ava_demons_lord.png',
@@ -204,7 +204,7 @@ const demonsListCaptain = [
     эффективно используется повелителем орд гнева. Он сталкивает всех друг с другом и всегда получает то, что ему нужно.`,
     avatar: 'demons_lord.png',
     id: 2,
-    characteristics: [ '180', '60', '0', '30', '0', '0', '1', 'дальняя' ] }
+    characteristics: [ '180', '60', '0', '40', '0', '0', '1', 'дальняя' ] }
 ];
 
 jsonconfig = JSON.stringify( demonsListCaptain );
@@ -217,7 +217,7 @@ const elfsListCaptain = [
     в знак чести и уважения. В бою они используют самые искусные тактики и стратегии, которые оттачивали веками.`,
     avatar: 'elfs_lord.png',
     id: 0,
-    characteristics: [ '200', '60', '40', '0', '0', '0', '1', 'ближняя' ] },
+    characteristics: [ '200', '60', '50', '0', '0', '0', '1', 'ближняя' ] },
 
     { name: 'Хранительница Магических Рун',
     portrait: 'ava_elfs_keeper.png',
@@ -225,7 +225,7 @@ const elfsListCaptain = [
     всеми силами природы и использовать их для защиты своих людей.`,
     avatar: 'elfs_keeper.png',
     id: 1,
-    characteristics: [ '120', '50', '0', '20', '0', '0', '6', 'дальняя' ] },
+    characteristics: [ '120', '50', '0', '25', '0', '0', '6', 'дальняя' ] },
 
     { name: 'Командир Лесных Рейнджеров',
     portrait: 'ava_elfs_ranger.png',
@@ -233,7 +233,7 @@ const elfsListCaptain = [
     камуфляжем. Лучшие из рейнджеров становятся командирами целых гарнизонов, охраняющих границы.`,
     avatar: 'elfs_ranger.png',
     id: 2,
-    characteristics: [ '150', '70', '30', '0', '0', '0', '1', 'дальняя' ] }
+    characteristics: [ '150', '70', '40', '0', '0', '0', '1', 'дальняя' ] }
 ];
 
 jsonconfig = JSON.stringify( elfsListCaptain );
@@ -246,7 +246,7 @@ const deadsListCaptain = [
     построить новую армию для него не проблема. Его слуги не чувствуют боли и усталости.`,
     avatar: 'deads_lord.png',
     id: 0,
-    characteristics: [ '200', '50', '40', '0', '0', '30', '1', 'ближняя' ] },
+    characteristics: [ '200', '50', '50', '0', '0', '30', '1', 'ближняя' ] },
 
     { name: 'Королева Личей',
     portrait: 'ava_deads_queen.png',
@@ -254,7 +254,7 @@ const deadsListCaptain = [
     их магические способности приумножились благодаря темному оккультному мастерству.`,
     avatar: 'deads_queen.png',
     id: 1,
-    characteristics: [ '120', '40', '0', '20', '0', '30', '6', 'дальняя' ] },
+    characteristics: [ '120', '40', '0', '25', '0', '30', '6', 'дальняя' ] },
 
     { name: 'Верховный Вампир',
     portrait: 'ava_deads_vampire.png',
@@ -262,7 +262,7 @@ const deadsListCaptain = [
     достигшие наивысшего успеха в порабощении живых, становятся верховными вампирами.`,
     avatar: 'deads_vampire.png',
     id: 2,
-    characteristics: [ '120', '60', '0', '30', '0', '30', '1', 'дальняя' ] }
+    characteristics: [ '120', '60', '0', '40', '0', '30', '1', 'дальняя' ] }
 ];
 
 jsonconfig = JSON.stringify( deadsListCaptain );
@@ -270,54 +270,54 @@ localStorage.setItem( 'Deads', jsonconfig );
 
 // аватарки и характеристики для страниц - расстановка юнитов и сражение юнитов
 export const unitsList = [
-[ [ [ 'Капитан Королевской Кавалерии', 200, 50, 50, 0, 20, 0, 1, 'ближняя', 'empire_captain.png', '1' ],
-    [ 'Архимаг Империи', 120, 40, 0, 20, 20, 0, 6, 'дальняя', 'empire_sorcerer.png', '2' ],
-    [ 'Командир Королевских Рейнджеров', 150, 60, 30, 0, 20, 0, 1, 'дальняя', 'empire_rangers.png', '3' ] 
+[ [ [ 'Капитан Королевской Кавалерии', 200, 50, 100, 0, 20, 0, 1, 'ближняя', 'empire_captain.png', '1' ],
+    [ 'Архимаг Империи', 120, 40, 0, 25, 20, 0, 6, 'дальняя', 'empire_sorcerer.png', '2' ],
+    [ 'Командир Королевских Рейнджеров', 150, 60, 40, 0, 20, 0, 1, 'дальняя', 'empire_rangers.png', '3' ] 
     ],
 
-    [ [ 'Рыцарь', 170, 50, 50, 0, 20, 0, 1, 'ближняя', 'empire_knight.png', '4' ],
-        [ 'Охотник на ведьм', 140, 50, 30, 0, 0, 100, 1, 'ближняя', 'empire_witchunter.png', '5' ],
-        [ 'Лучник', 120, 60, 0, 25, 20, 0, 1, 'дальняя', 'empire_archer.png', '6' ],
+    [ [ 'Рыцарь', 170, 50, 35, 0, 20, 0, 1, 'ближняя', 'empire_knight.png', '4' ],
+        [ 'Охотник на ведьм', 140, 50, 35, 0, 0, 100, 1, 'ближняя', 'empire_witchunter.png', '5' ],
+        [ 'Лучник', 120, 60, 0, 30, 20, 0, 1, 'дальняя', 'empire_archer.png', '6' ],
         [ 'Маг', 90, 40, 0, 15, 20, 0, 6, 'дальняя', 'empire_mag.png', '7' ],
-        [ 'Священник', 100, 30, 0, 20, 20, 0, 1, 'дальняя', 'empire_priest.png', '8' ] 
+        [ 'Священник', 105, 30, 0, 40, 20, 0, 1, 'дальняя', 'empire_priest.png', '8' ] 
     ]
 ],
 
 [ [ [ 'Герцог Легионов Ненависти', 250, 50, 50, 0, 0, 0, 1, 'ближняя', 'demons_dukes.png', '1' ],
-        [ 'Графиня Адского Культа', 150, 40, 0, 20, 0, 0, 6, 'дальняя', 'demons_countes.png', '2' ],
-        [ 'Повелитель Орд Гнева', 180, 60, 0, 30, 0, 0, 1, 'дальняя', 'demons_ranger.png', '3' ] 
+        [ 'Графиня Адского Культа', 150, 40, 0, 25, 0, 0, 6, 'дальняя', 'demons_countes.png', '2' ],
+        [ 'Повелитель Орд Гнева', 180, 60, 0, 40, 0, 0, 1, 'дальняя', 'demons_ranger.png', '3' ] 
     ],
 
-    [ [ 'Адский воин', 220, 50, 50, 0, 0, 0, 1, 'ближняя', 'demons_hall_warrior.png', '4' ],
-        [ 'Рыцарь тьмы', 190, 50, 30, 0, 0, 50, 1, 'ближняя', 'demons_dark_knight.png', '5' ],
+    [ [ 'Адский воин', 200, 50, 35, 0, 0, 0, 1, 'ближняя', 'demons_hall_warrior.png', '4' ],
+        [ 'Рыцарь тьмы', 170, 50, 35, 0, 0, 50, 1, 'ближняя', 'demons_dark_knight.png', '5' ],
         [ 'Демонолог', 90, 40, 15, 0, 0, 30, 6, 'дальняя', 'demons_demonolog.png', '6' ],
-        [ 'Горгулья', 170, 60, 25, 0, 0, 0, 1, 'дальняя', 'demons_gargoyle.png', '7' ],
+        [ 'Горгулья', 150, 60, 30, 0, 0, 0, 1, 'дальняя', 'demons_gargoyle.png', '7' ],
         [ 'Модеус', 90, 40, 0, 15, 0, 100, 6, 'дальняя', 'demons_modeus.png', '8' ] 
     ]
 ],
 
-[ [ [ 'Эльфийский Владыка', 200, 60, 40, 0, 0, 0, 1, 'ближняя', 'elfs_captain.png', '1' ],
-    [ 'Хранительница Магических Рун', 120, 50, 0, 20, 0, 0, 6, 'дальняя', 'elfs_keper.png', '2' ],
-    [ 'Командир Лесных Рейнджеров', 150, 70, 30, 0, 0, 0, 1, 'дальняя', 'elfs_stinger.png', '3' ] 
+[ [ [ 'Эльфийский Владыка', 200, 60, 50, 0, 0, 0, 1, 'ближняя', 'elfs_captain.png', '1' ],
+    [ 'Хранительница Магических Рун', 120, 50, 0, 25, 0, 0, 6, 'дальняя', 'elfs_keper.png', '2' ],
+    [ 'Командир Лесных Рейнджеров', 150, 70, 40, 0, 0, 0, 1, 'дальняя', 'elfs_stinger.png', '3' ] 
     ],
 
-    [ [ 'Кентавр', 170, 50, 30, 0, 20, 0, 1, 'ближняя', 'elfs_centaur.png', '4' ],
+    [ [ 'Кентавр', 170, 50, 35, 0, 20, 0, 1, 'ближняя', 'elfs_centaur.png', '4' ],
     [ 'Рейнджер', 100, 65, 15, 0, 0, 0, 1, 'дальняя', 'elfs_archer.png', '5' ],
     [ 'Лорд Лесов', 90, 50, 15, 0, 0, 0, 6, 'дальняя', 'elfs_overlord.png', '6' ],
-    [ 'Часовой', 120, 65, 0, 25, 0, 0, 1, 'дальняя', 'elfs_guard.png', '7' ],
-    [ 'Маг', 90, 45, 0, 15, 0, 100, 6, 'дальняя', 'elfs_mag.png', '8' ] 
+    [ 'Часовой', 120, 65, 0, 30, 0, 0, 1, 'дальняя', 'elfs_guard.png', '7' ],
+    [ 'Маг', 90, 50, 0, 15, 0, 100, 6, 'дальняя', 'elfs_mag.png', '8' ] 
     ]
 ],
 
-[ [ [ 'Повелитель Скелетов', 200, 60, 40, 0, 0, 0, 1, 'ближняя', 'deads_overlord.png', '1' ],
-    [ 'Королева Личей', 120, 50, 0, 20, 0, 0, 6, 'дальняя', 'deads_lich.png', '2' ],
-    [ 'Верховный Вампир', 150, 70, 30, 0, 0, 0, 1, 'дальняя', 'deads_vampir.png', '3' ] ],
+[ [ [ 'Повелитель Скелетов', 200, 50, 50, 0, 0, 30, 1, 'ближняя', 'deads_overlord.png', '1' ],
+    [ 'Королева Личей', 120, 40, 0, 25, 0, 30, 6, 'дальняя', 'deads_lich.png', '2' ],
+    [ 'Верховный Вампир', 120, 60, 0, 40, 0, 0, 1, 'дальняя', 'deads_vampir.png', '3' ] ],
 
-    [ [ 'Воин Скелет', 170, 50, 30, 0, 0, 30, 1, 'ближняя', 'deads_skelet.png', '4' ],
-    [ 'Зомби', 140, 50, 30, 0, 0, 100, 1, 'ближння', 'deads_zombi.png', '5' ],
+    [ [ 'Воин Скелет', 170, 50, 35, 0, 0, 30, 1, 'ближняя', 'deads_skelet.png', '4' ],
+    [ 'Зомби', 140, 50, 35, 0, 0, 100, 1, 'ближняя', 'deads_zombi.png', '5' ],
     [ 'Некромант', 90, 40, 0, 15, 0, 30, 6, 'дальняя', 'deads_necromant.png', '6' ],
-    [ 'Призрак', 120, 60, 0, 25, 0, 30, 1, 'дальняя', 'deads_archer.png', '7' ],
-    [ 'Оборотень', 90, 50, 30, 0, 100, 0, 1, ',ближняя', 'deads_lican.png', '8' ] 
+    [ 'Призрак', 120, 60, 0, 30, 0, 30, 1, 'дальняя', 'deads_archer.png', '7' ],
+    [ 'Оборотень', 90, 50, 35, 0, 100, 0, 1, 'ближняя', 'deads_lican.png', '8' ] 
     ]
 ]
 
@@ -325,8 +325,8 @@ export const unitsList = [
 
 // анимационные модели для страницы - сражение юнитов
 export const combatModels = {
-    Empire: [ { left: { path: './animation/Empire/death_unit_left.gif', size: [ 100, 169 ] }, 
-    right: { path: './animation/Empire/death_unit_right.gif', size: [ 100, 169 ] } }, 
+    Empire: [ { left: { path: './animation/Empire/death_unit_left.gif', size: [ 83, 140 ] }, 
+    right: { path: './animation/Empire/death_unit_right.gif', size: [ 83, 140 ] } }, 
 { left: [ { path: './animation/Empire/captain/captain_state_left.gif', size: [ 203, 153 ] }, 
 { path: './animation/Empire/captain/captain_attack_left.gif', size: [ 278, 346 ] }, 
 { path: './animation/Empire/captain/captain_getdam_left.gif', size: [ 223, 161 ] } ], 
@@ -493,7 +493,60 @@ right: [ { path: './animation/Elfs/mag/mag_state_right.gif', size: [ 61, 88 ] },
 { path: './animation/Elfs/mag/mag_attack_right.gif', size: [ 258, 251 ] }, 
 { path: './animation/Elfs/mag/mag_getdam_right.gif', size: [ 62, 88 ] }, 
 { path: './animation/Elfs/mag/mag_damage.gif', size: [ 367, 288 ] } ] }],
-    Deads: []
+    Deads: [ { left: { path: './animation/Deads/death_unit_left.gif', size: [ 111, 120 ] }, 
+    right: { path: './animation/Deads/death_unit_right.gif', size: [ 111, 120 ] } }, 
+{ left: [ { path: './animation/Deads/lord/lord_state_left.gif', size: [ 170, 162 ] }, 
+{ path: './animation/Deads/lord/lord_attack_left.gif', size: [ 311, 334 ] }, 
+{ path: './animation/Deads/lord/lord_getdam_left.gif', size: [ 187, 175 ] } ], 
+right: [ { path: './animation/Deads/lord/lord_state_right.gif', size: [ 170, 162 ] },
+{ path: './animation/Deads/lord/lord_attack_right.gif', size: [ 311, 334 ] }, 
+{ path: './animation/Deads/lord/lord_getdam_right.gif', size: [ 187, 175 ] } ] },
+{ left: [ { path: './animation/Deads/lich/lich_state_left.gif', size: [ 76, 117 ] }, 
+{ path: './animation/Deads/lich/lich_attack_left.gif', size: [ 207, 244 ] }, 
+{ path: './animation/Deads/lich/lich_getdam_left.gif', size: [ 81, 119 ] }, 
+{ path: './animation/Deads/lich/lich_damage.gif', size: [ 364, 297 ] } ], 
+right: [ { path: './animation/Deads/lich/lich_state_right.gif', size: [ 76, 117 ] }, 
+{ path: './animation/Deads/lich/lich_attack_right.gif', size: [ 207, 244 ] }, 
+{ path: './animation/Deads/lich/lich_getdam_right.gif', size: [ 81, 119 ] }, 
+{ path: './animation/Deads/lich/lich_damage.gif', size: [ 364, 297 ] } ] },
+{ left: [ { path: './animation/Deads/vampire/vampire_state_left.gif', size: [ 74, 110 ] }, 
+{ path: './animation/Deads/vampire/vampire_attack_left.gif', size: [ 130, 123 ] }, 
+{ path: './animation/Deads/vampire/vampire_getdam_left.gif', size: [ 77, 110 ] } ], 
+right: [ { path: './animation/Deads/vampire/vampire_state_right.gif', size: [ 74, 110 ] },
+{ path: './animation/Deads/vampire/vampire_attack_right.gif', size: [ 130, 123 ] }, 
+{ path: './animation/Deads/vampire/vampire_getdam_right.gif', size: [ 77, 110 ] } ] },
+{ left: [ { path: './animation/Deads/skelet/skelet_state_left.gif', size: [ 61, 78 ] }, 
+{ path: './animation/Deads/skelet/skelet_attack_left.gif', size: [ 194, 211 ] }, 
+{ path: './animation/Deads/skelet/skelet_getdam_left.gif', size: [ 115, 91 ] } ], 
+right: [ { path: './animation/Deads/skelet/skelet_state_right.gif', size: [ 61, 78 ] },
+{ path: './animation/Deads/skelet/skelet_attack_right.gif', size: [ 194, 211 ] }, 
+{ path: './animation/Deads/skelet/skelet_getdam_right.gif', size: [ 115, 91 ] } ] },
+{ left: [ { path: './animation/Deads/zombi/zombi_state_left.gif', size: [ 55, 96 ] }, 
+{ path: './animation/Deads/zombi/zombi_attack_left.gif' , size: [ 82, 111 ] }, 
+{ path: './animation/Deads/zombi/zombi_getdam_left.gif', size: [ 62, 102 ] } ], 
+right: [ { path: './animation/Deads/zombi/zombi_state_right.gif', size: [ 55, 96 ] },
+{ path: './animation/Deads/zombi/zombi_attack_right.gif', size: [ 82, 111 ] }, 
+{ path: './animation/Deads/zombi/zombi_getdam_right.gif', size: [ 62, 102 ] } ] },
+{ left: [ { path: './animation/Deads/necromant/necromant_state_left.gif', size: [ 81, 108 ] }, 
+{ path: './animation/Deads/necromant/necromant_attack_left.gif', size: [ 155, 216 ] }, 
+{ path: './animation/Deads/necromant/necromant_getdam_left.gif', size: [ 104, 108 ] }, 
+{ path: './animation/Deads/necromant/necromant_damage.gif', size: [ 240, 375 ] } ], 
+right: [ { path: './animation/Deads/necromant/necromant_state_right.gif', size: [ 81, 108 ] }, 
+{ path: './animation/Deads/necromant/necromant_attack_right.gif', size: [ 155, 216 ] }, 
+{ path: './animation/Deads/necromant/necromant_getdam_right.gif', size: [ 104, 108 ] }, 
+{ path: './animation/Deads/necromant/necromant_damage.gif', size: [ 240, 375 ] } ] },
+{ left: [ { path: './animation/Deads/ghost/ghost_state_left.gif', size: [ 46, 95 ] }, 
+{ path: './animation/Deads/ghost/ghost_attack_left.gif', size: [ 124, 178 ] }, 
+{ path: './animation/Deads/ghost/ghost_getdam_left.gif', size: [ 89, 98 ] } ], 
+right: [ { path: './animation/Deads/ghost/ghost_state_right.gif', size: [ 46, 95 ] },
+{ path: './animation/Deads/ghost/ghost_attack_right.gif', size: [ 124, 178 ] }, 
+{ path: './animation/Deads/ghost/ghost_getdam_right.gif', size: [ 89, 98 ] } ] },
+{ left: [ { path: './animation/Deads/lican/lican_state_left.gif', size: [ 114, 99 ] }, 
+{ path: './animation/Deads/lican/lican_attack_left.gif', size: [ 208, 144 ] }, 
+{ path: './animation/Deads/lican/lican_getdam_left.gif', size: [ 150, 123 ] } ], 
+right: [ { path: './animation/Deads/lican/lican_state_right.gif', size: [ 114, 99 ] }, 
+{ path: './animation/Deads/lican/lican_attack_right.gif', size: [ 208, 144 ] }, 
+{ path: './animation/Deads/lican/lican_getdam_right.gif', size: [ 150, 123 ] } ] } ]
 };
 
 // аватарки и описание юнитов для страницы - найм юнитов
@@ -501,18 +554,18 @@ export const listUnits = [
 
     [ { name: 'Рыцарь',
     portrait: 'empire_knight.png',
-    startlist: '<p><br>Здоровье - 170<br>Инициатива - 50<br>Урон - 30<br>Броня - 20<br>Цели - 1</p>',
+    startlist: '<p><br>Здоровье - 170<br>Инициатива - 50<br>Урон - 35<br>Броня - 20<br>Цели - 1</p>',
     endlist: '<p><br>Маг.урон - 0<br>Маг.защита - 0<br>Аттака - ближняя<br>Способности - нет</p>',
     id: 0 },
     { name: 'Охотник на ведьм',
     portrait: 'empire_witchunter.png',
-    startlist: '<p><br>Здоровье - 140<br>Инициатива - 50<br>Урон - 30<br>Броня - 0<br>Цели - 1</p>',
+    startlist: '<p><br>Здоровье - 140<br>Инициатива - 50<br>Урон - 35<br>Броня - 0<br>Цели - 1</p>',
     endlist: '<p><br>Маг.урон - 0<br>Маг.защита - 0<br>Аттака - ближняя<br>Способности - иммунитет к магии</p>',
     id: 1 },
     { name: 'Лучник',
     portrait: 'empire_archer.png',
     startlist: '<p><br>Здоровье - 120<br>Инициатива - 60<br>Урон - 0<br>Броня - 20<br>Цели - 1</p>',
-    endlist: '<p><br>Маг.урон - 25<br>Маг.защита - 0<br>Аттака - дальняя<br>Способности - нет</p>',
+    endlist: '<p><br>Маг.урон - 30<br>Маг.защита - 0<br>Аттака - дальняя<br>Способности - нет</p>',
     id: 2 },
     { name: 'Маг',
     portrait: 'empire_mag.png',
@@ -521,18 +574,18 @@ export const listUnits = [
     id: 3 },
     { name: 'Священник',
     portrait: 'empire_priest.png',
-    startlist: '<p><br>Здоровье - 100<br>Инициатива - 30<br>Урон - 0<br>Броня - 20<br>Цели - 1</p>',
+    startlist: '<p><br>Здоровье - 105<br>Инициатива - 30<br>Урон - 0<br>Броня - 20<br>Цели - 1</p>',
     endlist: '<p><br>Маг.урон - 0<br>Маг.защита - 0<br>Аттака - дальняя<br>Способности - лечение</p>',
     id: 4 } ],
 
     [ { name: 'Адский воин',
     portrait: 'demons_hall_warrior.png',
-    startlist: '<p><br>Здоровье - 220<br>Инициатива - 50<br>Урон - 30<br>Броня - 0<br>Цели - 1</p>',
+    startlist: '<p><br>Здоровье - 200<br>Инициатива - 50<br>Урон - 35<br>Броня - 0<br>Цели - 1</p>',
     endlist: '<p><br>Маг.урон - 0<br>Маг.защита - 0<br>Аттака - ближняя<br>Способности - нет</p>',
     id: 0 },
     { name: 'Рыцарь тьмы',
     portrait: 'demons_dark_knight.png',
-    startlist: '<p><br>Здоровье - 190<br>Инициатива - 50<br>Урон - 30<br>Броня - 0<br>Цели - 1</p>',
+    startlist: '<p><br>Здоровье - 170<br>Инициатива - 50<br>Урон - 35<br>Броня - 0<br>Цели - 1</p>',
     endlist: '<p><br>Маг.урон - 0<br>Маг.защита - 50<br>Аттака - ближняя<br>Способности - нет</p>',
     id: 1 },
     { name: 'Демонолог',
@@ -542,7 +595,7 @@ export const listUnits = [
     id: 2 },
     { name: 'Горгулья',
     portrait: 'demons_gargoyle.png',
-    startlist: '<p><br>Здоровье - 170<br>Инициатива - 60<br>Урон - 25<br>Броня - 0<br>Цели - 1</p>',
+    startlist: '<p><br>Здоровье - 150<br>Инициатива - 60<br>Урон - 30<br>Броня - 0<br>Цели - 1</p>',
     endlist: '<p><br>Маг.урон - 0<br>Маг.защита - 0<br>Аттака - дальняя<br>Способности - нет</p>',
     id: 3 },
     { name: 'Модеус',
@@ -553,7 +606,7 @@ export const listUnits = [
 
     [ { name: 'Кентавр',
     portrait: 'elfs_centaur.png',
-    startlist: '<p><br>Здоровье - 170<br>Инициатива - 50<br>Урон - 30<br>Броня - 20<br>Цели - 1</p>',
+    startlist: '<p><br>Здоровье - 170<br>Инициатива - 50<br>Урон - 35<br>Броня - 20<br>Цели - 1</p>',
     endlist: '<p><br>Маг.урон - 0<br>Маг.защита - 0<br>Аттака - ближняя<br>Способности - нет</p>',
     id: 0 },
     { name: 'Рейнджер',
@@ -569,22 +622,22 @@ export const listUnits = [
     { name: 'Часовой',
     portrait: 'elfs_guard.png',
     startlist: '<p><br>Здоровье - 120<br>Инициатива - 65<br>Урон - 0<br>Броня - 0<br>Цели - 1</p>',
-    endlist: '<p><br>Маг.урон - 25<br>Маг.защита - 0<br>Аттака - дальняя<br>Способности - нет</p>',
+    endlist: '<p><br>Маг.урон - 30<br>Маг.защита - 0<br>Аттака - дальняя<br>Способности - нет</p>',
     id: 3 },
     { name: 'Маг',
     portrait: 'elfs_mag.png',
-    startlist: '<p><br>Здоровье - 90<br>Инициатива - 45<br>Урон - 0<br>Броня - 0<br>Цели - 6</p>',
+    startlist: '<p><br>Здоровье - 90<br>Инициатива - 50<br>Урон - 0<br>Броня - 0<br>Цели - 6</p>',
     endlist: '<p><br>Маг.урон - 15<br>Маг.защита - 0<br>Аттака - дальняя<br>Способности - иммунитет к магии</p>',
     id: 4 } ],
 
     [ { name: 'Воин Скелет',
     portrait: 'deads_skelet.png',
-    startlist: '<p><br>Здоровье - 170<br>Инициатива - 50<br>Урон - 30<br>Броня - 0<br>Цели - 1</p>',
+    startlist: '<p><br>Здоровье - 170<br>Инициатива - 50<br>Урон - 35<br>Броня - 0<br>Цели - 1</p>',
     endlist: '<p><br>Маг.урон - 0<br>Маг.защита - 30<br>Аттака - ближняя<br>Способности - нет</p>',
     id: 0 },
     { name: 'Зомби',
     portrait: 'deads_zombi.png',
-    startlist: '<p><br>Здоровье - 140<br>Инициатива - 50<br>Урон - 30<br>Броня - 0<br>Цели - 1</p>',
+    startlist: '<p><br>Здоровье - 140<br>Инициатива - 50<br>Урон - 35<br>Броня - 0<br>Цели - 1</p>',
     endlist: '<p><br>Маг.урон - 0<br>Маг.защита - 0<br>Аттака - ближняя<br>Способности - иммунитет к магии</p>',
     id: 1 },
     { name: 'Некромант',
@@ -595,11 +648,11 @@ export const listUnits = [
     { name: 'Призрак',
     portrait: 'deads_archer.png',
     startlist: '<p><br>Здоровье - 120<br>Инициатива - 60<br>Урон - 0<br>Броня - 0<br>Цели - 1</p>',
-    endlist: '<p><br>Маг.урон - 25<br>Маг.защита - 30<br>Аттака - дальняя<br>Способности - нет</p>',
+    endlist: '<p><br>Маг.урон - 30<br>Маг.защита - 30<br>Аттака - дальняя<br>Способности - нет</p>',
     id: 3 },
     { name: 'Оборотень',
     portrait: 'deads_lican.png',
-    startlist: '<p><br>Здоровье - 90<br>Инициатива - 50<br>Урон - 30<br>Броня - 0<br>Цели - 1</p>',
+    startlist: '<p><br>Здоровье - 90<br>Инициатива - 50<br>Урон - 35<br>Броня - 0<br>Цели - 1</p>',
     endlist: '<p><br>Маг.урон - 0<br>Маг.защита - 0<br>Аттака - ближняя<br>Способности - иммунитет к оружию</p>',
     id: 4 } ]
 
@@ -662,8 +715,8 @@ export function buildSlotPlayer( slotPlayer, flag ) {
     const arrayUnit = [];
 
     for( let config of slotPlayer ) {
-        if( flag === 0 && config[10] === '8' ) { }
-        else if( flag === 3 && config[10] === '3' ) { }
+        if( flag === 0 && config[10] === '8' ) { arrayUnit.push( new Priest( config ) ); }
+        else if( flag === 3 && config[10] === '3' ) { arrayUnit.push( new Vampire( config ) ); }
         else if( config[7] === 6 ) { arrayUnit.push( new Mag( config ) ); }
         else { arrayUnit.push( new Unit( config ) ); } }
 

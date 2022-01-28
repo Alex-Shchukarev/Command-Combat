@@ -13,11 +13,11 @@
   <body>
     <div class="main_container"></div>
     <script type="module">
-      import Main from "./Main.js";
+      import StartWindow from './StartWin.js';
       const mainContainer = document.querySelector(".main_container");
-      let main = new Main();
+      let start = new StartWindow();
       mainContainer.innerHTML = "";
-      mainContainer.append(main.elem.elem);
+      mainContainer.append(start.elem);
     </script>
   </body>
 </html>

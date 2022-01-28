@@ -1311,21 +1311,66 @@ a:hover {
     filter: drop-shadow(0 0 5px magenta);
 }
 
-/*
+/* Styles for Final Window */
 
 .finish_window {
     height: 669px;
     width: 964px;
-    z-index: 500;
-    background: url('./img/race_modal_pl1.jpeg');
+    background: url('./img/fone_final.jpg');
     filter: grayscale(0.7);
-    opacity: 0.6;
-    margin-bottom: 30px;
 }
 
-.all_group_attack {
-    position: absolute;
-    z-index: 500;
+.menu_final {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    align-items: center;
+    list-style: none;
+    margin-top: 150px;
+}
+
+/* Styles for Result Window */
+
+.result_win {
+    height: 669px;
+    width: 964px;
+    background: url('./img/result_combat.jpeg');
+    margin: 0;
+    padding: 0;
+}
+
+.header_result {
+    height: 100px;
+    box-sizing: border-box;
+}
+
+.winner_info {
+    height: 400px;
+    box-sizing: border-box;
+}
+
+.info_player, .info_nickname, .info_race, .info_congratulation {
+    padding: 5px 20px;
+    font-size: 30px;
+    font-weight: 500;
+    color: rgb(235, 235, 94);
     text-align: center;
-    top: 100px;
-}*/
+    filter: drop-shadow(0 0 2px rgb(54, 24, 24));
+    font-family: 'Kingthings Petrock';
+    margin-top: 20px;
+}
+
+
+.footer_result {
+    height: 169px;
+    box-sizing: border-box;
+}
+
+.menu_result {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    align-items: center;
+    list-style: none;
+    margin-top: 20px;
+}

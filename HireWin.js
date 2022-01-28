@@ -354,7 +354,7 @@ export default class HireWindow {
             localStorage.setItem( 'configSecondPlayer', jsonconfig );
 
             // очищаем главный контейнер и переходим к следующему окну
-            this.musicHire.autoplay = false;
+            this.musicHire.src = '';
             this.mainContainer.innerHTML = '';
             const combatPlayers = new ModalWin2();
 

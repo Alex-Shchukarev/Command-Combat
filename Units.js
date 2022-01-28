@@ -26,7 +26,6 @@ export class Unit {
         this.currentHealth = config[1];
         this.currentArmor = config[5];
         this.currentMagicalDefense = config[6];
-        //this.unitAllAttack = config[12][4];
 
     }
 
@@ -44,6 +43,21 @@ export class Unit {
 
     }
 
+    damageOpponent = ( opponents ) => {
+
+        for( let opponent of opponents ) {
+
+            if( opponent !== 'transfer') {
+
+            let damage = this.damage - Math.floor( ( this.damage * opponent.currentArmor / 100 ) );
+            let magicalDamage = this.magicalDamage - Math.floor( (this.magicalDamage * opponent.currentMagicalDefense / 100 ) );
+            opponent.currentHealth -= ( damage + magicalDamage );
+            
+            }
+        
+        }
+    }
+
 }
 
 
@@ -55,6 +69,60 @@ export class Mag extends Unit {
         this.unitAllAttack = config[12][3];
         this.unitDeath = config[12][4];
 
+    }
+
+}
+
+export class Priest extends Unit {
+
+    constructor( config ) {
+
+        super( config );
+
+    }
+
+    damageOpponent = ( opponents ) => {
+
+        for( let opponent of opponents ) {
+
+            if( opponent !== 'transfer') {
+
+            let healthing = this.damage + this.magicalDamage;
+            if( ( healthing + opponent.currentHealth ) > opponent.health ) opponent.currentHealth = opponent.health;
+            else opponent.currentHealth += healthing;
+            
+            }
+        
+        }
+    }
+
+}
+
+export class Vampire extends Unit {
+
+    constructor( config ) {
+
+        super( config );
+
+    }
+
+    damageOpponent = ( opponents ) => {
+
+        for( let opponent of opponents ) {
+
+            if( opponent !== 'transfer') {
+
+                let damage = this.damage - Math.floor( ( this.damage * opponent.currentArmor / 100 ) );
+                let magicalDamage = this.magicalDamage - Math.floor( (this.magicalDamage * opponent.currentMagicalDefense / 100 ) );
+                let healthing = damage + magicalDamage;
+                opponent.currentHealth -= healthing;
+                if( ( healthing / 2 + this.currentHealth ) > this.health ) this.currentHealth = this.health;
+                else this.currentHealth += healthing / 2;
+                
+            
+            }
+        
+        }
     }
 
 }

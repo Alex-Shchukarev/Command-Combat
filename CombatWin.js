@@ -1,5 +1,7 @@
 "use strict";
 
+import { FinalWindow } from './FinalWin.js';
+import { ResultWindow } from './ResultWin.js';
 import { unitsList, combatModels, soundsMenu, soundsUnits } from './lib.js';
 import { createElem, fortune, getConfigArray, getConfigs, styleImage, buildSlotPlayer, setStartSettings } from './lib.js';
 import { queueUnits, slotUnitsEmpty, clearSlotAllUnits, getNearOpponents, checkValidTarget, styleImageAll } from './lib.js';
@@ -140,7 +142,7 @@ export default class CombatWin {
         image.style.position = 'absolute';
         image.style.left = coords[0] + 'px';
         image.style.top = coords[1] + 'px';
-        animationDate.push( elem[0].left );
+        animationDate.push( elem[0].right );
         item.push( animationDate );
         item.push( soundUnit );
 
@@ -170,6 +172,7 @@ export default class CombatWin {
       this.buttonPanel.addEventListener( 'click', this.clickButton );
       this.fieldMain.addEventListener( 'pointerover', this.overTarget );
       this.fieldMain.addEventListener( 'pointerout', this.leaveTarget );
+      this.currentTarget = null;
       this.menuSound = new Audio();
       this.menuSound.autoplay = true;
       this.soundOneUnitAttack = new Audio();
@@ -232,21 +235,10 @@ export default class CombatWin {
       } else if( target.closest( '.button_nobody' ) ) { // если нажата кнопка ничья
         this.menuSound.src = `${soundsMenu.nobodyWin}`;
         // вставляем окно завершения сражения с кнопками конец и новая игра
-        const container = this._elem.querySelector( '.container' );
-        container.insertAdjacentHTML( 'afterbegin', '<div class="finish_window"></div>' );
-        const finishWindow = this._elem.querySelector( '.finish_window' );
-        const buttonFinish = createElem( `<a href="#" class="btn_op">КОНЕЦ</a>` );
-        finishWindow.append( buttonFinish );
-        buttonFinish.addEventListener( 'click', this.endFight );
+        this.mainContainer.innerHTML = '';
+        const finwin = new FinalWindow();
 
       } else return;
-
-    }
-
-    // завершаем бой и очищаем окно
-    endFight = () => {
-
-      this.mainContainer.innerHTML = '';
 
     }
 
@@ -281,7 +273,7 @@ export default class CombatWin {
             
         return; 
         
-      } else if( this.activeUnit.position[1] === identificator[1] || identificator == null ) { // юниты своей команды
+      } else if( this.activeUnit.position[1] === identificator[1] ) { // юниты своей команды
             
         return; 
         
@@ -295,7 +287,6 @@ export default class CombatWin {
 
           let slotOpponents = getNearOpponents( this.chooseSlot( identificator ) );
           let slotActiveUnit = getNearOpponents( this.chooseSlot( this.activeUnit.position ) );
-          console.log( slotActiveUnit );
           if( checkValidTarget( this.activeUnit.position, slotOpponents, identificator, slotActiveUnit ) ) {
             
             this.getTarget( target, identificator );
@@ -334,7 +325,7 @@ export default class CombatWin {
     }
 
     // покидаем потенциальную цель
-    leaveTarget = () => {
+    leaveTarget = ( event ) => {
 
       this.activeTarget.removeEventListener( 'click', this.catchTarget );
       this._elem.querySelector( '.icon_target' ).classList.remove( 'icon_target' );
@@ -344,14 +335,16 @@ export default class CombatWin {
 
     // проверка уровня здоровья юнита
     checkUnitLive = ( unit, slotPlayer, slotCombat ) => {
-
+      
       if( unit.currentHealth <= 0 ) { // если юнита убили
-
+        
         slotPlayer.forEach( ( elem, index, array ) => {
                 
           if( elem.position === unit.position) { 
                     
             array.splice( index, 1, 'transfer' ); // удаляем объект юнита из слота игрока и вставляем заглушку
+          } 
+        } );
             // загружаем звук умирающего юнита
             const audio = new Audio();
             audio.src = `${unit.unitDeathSound}`; 
@@ -360,21 +353,19 @@ export default class CombatWin {
             this._elem.querySelector( `.i_${unit.position}` ).setAttribute( 'src', './img/deadicon.png' );
             this._elem.querySelector( `.ih_${unit.position}` ).innerHTML = '-';
             let coords = styleImage( unit.unitDeath.size[0], unit.unitDeath.size[1] );
-            this._elem.querySelector( `.${unit.position}` ).setAttribute( 'src', `${unit.unitDeath.path}` );
             let image = this._elem.querySelector( `.${unit.position}` );
-            image.closest( 'li' ).removeAttribute( 'data-id' );
+            image.setAttribute( 'src', `${unit.unitDeath.path}` );
             image.style.position = 'absolute';
             image.style.left = coords[0] + 'px';
             image.style.top = coords[1] + 'px';
-
-          }
-                
-        } );
+            let contentLi = image.closest( 'li' );
+            setTimeout( () => contentLi.innerHTML = '', 1500 );
+            contentLi.removeAttribute( 'data-id' );
 
         slotCombat.forEach( ( item, index, array ) => { // в общем слоте всех юнитов удаляем юнита и вставляем на его место заглушку
             
           if( item !== 'transfer' && item.position === unit.position ) array.splice( index, 1, 'transfer' );
-        
+
         } );
             
       } else if( unit.currentHealth <= unit.health || unit.currentHealth >= unit.health ) { // если юнита ранили или полечили
@@ -410,18 +401,21 @@ export default class CombatWin {
           this.activeUnit = unit;
 
           while( !this.actionDone ) { // ожидаем действие пользователя
-
-            await new Promise( ( resolve ) => setTimeout( resolve, 500 ) );
+            
+            await new Promise( ( resolve ) => setTimeout( resolve, 100 ) );
 
           }
-          await new Promise( ( resolve ) => setTimeout( resolve, 100 ) );
           // удаляем подсветку уюнита и его иконки
           elemUnit.classList.remove( 'active_unit' );
           iconUnit.classList.remove( 'icon_active' );
+          await new Promise( ( resolve ) => setTimeout( resolve, 500 ) );
+          // удаляем подсветку уюнита и его иконки
+          //elemUnit.classList.remove( 'active_unit' );
+          //iconUnit.classList.remove( 'icon_active' );
                 
           // проверяем слоты юнитов, если какой-то пуст завершаем битву и выводим окно с победителем
-          if( slotUnitsEmpty( this.slotPlayer1 ) ) { console.log( 'Player2 is winner!' ); break leaveFight; }
-          if( slotUnitsEmpty( this.slotPlayer2 ) ) { console.log( 'Player1 is winner!' ); break leaveFight; }
+          if( slotUnitsEmpty( this.slotPlayer1 ) ) { const id = 2; this.createConfigWinner( id ); break leaveFight; }
+          if( slotUnitsEmpty( this.slotPlayer2 ) ) { const id = 1; this.createConfigWinner( id ); break leaveFight; }
                 
           this.actionDone = false; // устанавливаем флаг, что действие невыполнено для следующего юнита
 
@@ -432,6 +426,10 @@ export default class CombatWin {
         clearSlotAllUnits( this.slotPlayer2 );
 
       }
+
+      // очищаем главный контейнер и переходим к следующему окну
+      this.mainContainer.innerHTML = '';
+      const resultWin = new ResultWindow();
 
     }
 
@@ -450,17 +448,11 @@ export default class CombatWin {
       this.soundOneUnitAttack.src = `${this.activeUnit.unitAttackSound}`;
       await new Promise( ( resolve ) => setTimeout( resolve, 2000 ) ); // ждем 2/3 удара, чтобы цель поменяла анимашку в середине атаки
       
-      for( let opponent of opponents ) {
-
-          elemActiveTarget.setAttribute( 'src', `${opponent.unitGetDam.path}` );
-          elemActiveTarget.style.position = 'absolute';
-          elemActiveTarget.style.left = coordsActiveTarget[0] + 'px';
-          elemActiveTarget.style.top = coordsActiveTarget[1] + 'px';
-          let damage = this.activeUnit.damage - Math.floor( ( this.activeUnit.damage * opponent.currentArmor / 100 ) );
-          let magicalDamage = this.activeUnit.magicalDamage - Math.floor( (this.activeUnit.magicalDamage * opponent.magicalDefense / 100 ) );
-          opponent.currentHealth -= ( damage + magicalDamage );
-      
-      }
+      elemActiveTarget.setAttribute( 'src', `${opponents[0].unitGetDam.path}` );
+      elemActiveTarget.style.position = 'absolute';
+      elemActiveTarget.style.left = coordsActiveTarget[0] + 'px';
+      elemActiveTarget.style.top = coordsActiveTarget[1] + 'px';
+      this.activeUnit.damageOpponent( opponents );
 
       await new Promise( ( resolve ) => setTimeout( resolve, 1000 ) ); // ждем оставшуюся часть анимации атаки
 
@@ -474,6 +466,7 @@ export default class CombatWin {
       elementActiveUnit.style.position = 'absolute';
       elementActiveUnit.style.left = coordsAttackUnit[0] + 'px';
       elemActiveUnit.style.top = coordsAttackUnit[1] + 'px';
+      this._elem.querySelector( `.ih_${this.activeUnit.position}` ).innerHTML = `${this.activeUnit.currentHealth}`;
       elementActiveTarget.style = '';
       elementActiveTarget.setAttribute( 'src', `${opponents[0].unitStatic.path}` );
       elementActiveTarget.style.position = 'absolute';
@@ -509,18 +502,9 @@ export default class CombatWin {
       elemActiveUnit.style.position = 'absolute';
       elemActiveUnit.style.left = coordsActiveUnit[0] + 'px';
       elemActiveUnit.style.top = coordsActiveUnit[1] + 'px';
-      await new Promise( ( resolve ) => setTimeout( resolve, 1000 ) ); // ждем 1/4 удара, чтобы вставить анимашку в середине атаки
+      await new Promise( ( resolve ) => setTimeout( resolve, 1500 ) ); // ждем 1/4 удара, чтобы вставить анимашку в середине атаки
       
-      for( let opponent of opponents ) {
-
-        if( opponent !== 'transfer') {
-          
-          let damage = this.activeUnit.damage - Math.floor( ( this.activeUnit.damage * opponent.currentArmor / 100 ) );
-          let magicalDamage = this.activeUnit.magicalDamage - Math.floor( (this.activeUnit.magicalDamage * opponent.currentMagicalDefense / 100 ) );
-          opponent.currentHealth -= ( damage + magicalDamage );
-        }
-      }
-
+      this.activeUnit.damageOpponent( opponents );
       elemField.setAttribute( 'src', `${this.activeUnit.unitAllAttack.path}` );
       elemField.style.position = 'absolute';
       elemField.style.left = coordsField[0] + 'px';
@@ -555,6 +539,38 @@ export default class CombatWin {
       this.actionDone = true;
     }
 
+    createConfigWinner = ( id ) => {
+
+      let jsonconfig;
+      if( id === 1 ) {
+        // сохраняем конфигурацию первого игрока
+        const firstPlayerConfig = {
+
+          race: this.configFirstPlayer.race,
+          nickname: this.configFirstPlayer.nickname,
+          id: 1 
+
+      };
+
+      jsonconfig = JSON.stringify( firstPlayerConfig );
+      localStorage.setItem( 'configWinnerPlayer', jsonconfig );
+
+      } else {
+        // сохраняем конфигурацию второго игрока
+        const secondPlayerConfig = {
+
+          race: this.configSecondPlayer.race,
+          nickname: this.configSecondPlayer.nickname,
+          id: 2
+
+      };
+
+      jsonconfig = JSON.stringify( secondPlayerConfig );
+      localStorage.setItem( 'configWinnerPlayer', jsonconfig );
+
+      }
+
+    }
 
     get elem() {
 
