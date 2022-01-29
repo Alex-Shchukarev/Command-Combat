@@ -1,6 +1,7 @@
 "use strict";
 
 import Race from './Race.js';
+import { HelperWin } from './Tutorial.js';
 import { createElem, soundsMenu, contentArray } from './lib.js';
 
 export default class StartWindow {
@@ -14,11 +15,14 @@ export default class StartWindow {
         // вешаем обработчики на кнопки
         const startBtn = this._elem.querySelector( '.start' );
         const exitBtn = this._elem.querySelector( '.exit' );
+        const helpBtn = this._elem.querySelector( '.help' );
         startBtn.addEventListener( 'click', this.start );
+        helpBtn.addEventListener( 'click', this.helper );
         exitBtn.addEventListener( 'click', this.close );
 
         this.soundMenu = new Audio();
         this.soundMenu.autoplay = true;
+        this.mainContainer = document.querySelector( '.main_container' );
 
     }
 
@@ -26,13 +30,24 @@ export default class StartWindow {
 
         // запускаем аудио элемента
         this.soundMenu.src = `${soundsMenu.buttonClickStart}`; 
-
-        const mainContainer = document.querySelector( '.main_container' );
         
         // При нажатии кнопки Start переходим к следующему окну - Выбор расы
         setTimeout( () => {
-            mainContainer.innerHTML = '';
+            this.mainContainer.innerHTML = '';
             const rasa = new Race();
+        }, 500 ); 
+
+    }
+
+    helper = () => {
+
+        // запускаем аудио элемента
+        this.soundMenu.src = `${soundsMenu.buttonClickStart}`;
+        
+        // При нажатии кнопки Start переходим к следующему окну - Выбор расы
+        setTimeout( () => {
+            this.mainContainer.innerHTML = '';
+            const tutor = new HelperWin();
         }, 500 ); 
 
     }

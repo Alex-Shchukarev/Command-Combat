@@ -1,6 +1,6 @@
 "use strict";
 
-import { ModalWin2 } from './Modal2.js';
+import SetUnitsWin from './SetUnits.js';
 import { createElem, contentArray, listUnits, soundsMenu, musicHireWindow } from './lib.js';
 
 export default class HireWindow {
@@ -356,7 +356,7 @@ export default class HireWindow {
             // очищаем главный контейнер и переходим к следующему окну
             this.musicHire.src = '';
             this.mainContainer.innerHTML = '';
-            const combatPlayers = new ModalWin2();
+            const setWin = new SetUnitsWin();
 
         }
 

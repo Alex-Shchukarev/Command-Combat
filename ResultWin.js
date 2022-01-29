@@ -1,7 +1,7 @@
 "use strict";
 
 import { createElem, soundsMenu } from "./lib.js";
-import SecondWin from "./Race.js";
+import StartWindow from "./StartWin.js";
 
 export class ResultWindow {
 
@@ -57,8 +57,11 @@ export class ResultWindow {
         
         // При нажатии кнопки переходим к следующему окну - Стартовое окно
         setTimeout( () => {
-            this.mainContainer.innerHTML = '';
-            const newGame = new SecondWin();
+
+          const startWin = new StartWindow();
+          this.mainContainer.innerHTML = "";
+          this.mainContainer.append( startWin.elem );
+
         }, 500 ); 
 
     }

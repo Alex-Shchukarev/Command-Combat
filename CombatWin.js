@@ -2,7 +2,7 @@
 
 import { FinalWindow } from './FinalWin.js';
 import { ResultWindow } from './ResultWin.js';
-import { unitsList, combatModels, soundsMenu, soundsUnits } from './lib.js';
+import { unitsList, combatModels, soundsMenu, soundsUnits, contentArray } from './lib.js';
 import { createElem, fortune, getConfigArray, getConfigs, styleImage, buildSlotPlayer, setStartSettings } from './lib.js';
 import { queueUnits, slotUnitsEmpty, clearSlotAllUnits, getNearOpponents, checkValidTarget, styleImageAll } from './lib.js';
 
@@ -189,6 +189,10 @@ export default class CombatWin {
       this.menuSound.autoplay = true;
       this.soundOneUnitAttack = new Audio();
       this.soundOneUnitAttack.autoplay = true;
+      this.soundsBattle = new Audio();
+      this.soundsBattle.volume = 0.4;
+      this.soundsBattle.loop = true;
+      this.soundsBattle.autoplay = true;
 
     }
 
@@ -207,6 +211,7 @@ export default class CombatWin {
       this.menuSound.src = `${soundsMenu.startBattle}`;
       this.modalWindow.innerHTML = '';
       this.modalWindow.remove();
+      this.soundsBattle.src = `${soundsMenu.battleMusic}`;
       this.doAction();
 
     }
@@ -248,6 +253,7 @@ export default class CombatWin {
         this.menuSound.src = `${soundsMenu.nobodyWin}`;
         // вставляем окно завершения сражения с кнопками конец и новая игра
         this.mainContainer.innerHTML = '';
+        this.soundsBattle.src = '';
         const finwin = new FinalWindow();
 
       } else return;
@@ -441,6 +447,7 @@ export default class CombatWin {
 
       // очищаем главный контейнер и переходим к следующему окну
       this.mainContainer.innerHTML = '';
+      this.soundsBattle.src = '';
       const resultWin = new ResultWindow();
 
     }

@@ -1,7 +1,7 @@
 "use strict";
 
 import { createElem, contentArray, soundsMenu, soundsCaptains, getConfigArray } from './lib.js';
-import { ModalWin } from './Modal.js';
+import HireWindow from './HireWin.js';
 
 export default class CaptainsWindow {
 
@@ -198,7 +198,7 @@ export default class CaptainsWindow {
 
         // переходим к следующему окну - найм юнитов
         this.mainContainer.innerHTML = '';
-        const modalHireUnits = new ModalWin();
+        const hireWin = new HireWindow();
 
     }
 

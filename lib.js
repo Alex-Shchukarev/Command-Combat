@@ -17,9 +17,36 @@ export const contentArray = {
     Большинство регионов населено вероотступниками, которые ждут прихода к власти сильнейшей расы.Захватывающая, пошаговая стратегия 
     "Командный бой" позволит вам окунуться в мир фентази. Каждая раса борется за право возглавить турнирную таблицу. Кому поможете вы?
     Это может быть доблестная Империя, благородные Эльфы, жестокие Демоны или восставшие Мертвецы, выбирайте и сражайтесь!</p></div>
-    <ul class="menu"><li class="start"><a href="#" class="btn_op">НАЧАТЬ ИГРУ</a></li><li class="exit"><a href="#" class="btn_op">ВЫХОД</a>
-    </li></ul><div class="useful_link"><div class="git"><a href="https://github.com/Alex-Shchukarev/JSlearn/tree/master/project"></a>
-    </div><p>v. 1.2</p><p>Shukarev A.A.</p></div></div>`,
+    <ul class="menu"><li class="start"><a href="#" class="btn_op">НАЧАТЬ ИГРУ</a></li><li class="help">
+    <a href="#" class="btn_op">КАК ИГРАТЬ</a></li><li class="exit"><a href="#" class="btn_op">ВЫХОД</a></li></ul><div class="useful_link">
+    <div class="git"><a href="https://github.com/Alex-Shchukarev/Command-Combat"></a></div><p>v. 1.3</p><p>Shukarev A.A.</p></div></div>`,
+    helper: [ `<div class="big_container"><div class="container"><div class="tutorial"><div class="header_tutorial">
+    <div class="name_game">Command Combat</div><div class="emblem"></div></div><div class="stepper_tutorial"><div class="stepper_steps">
+    <ul class="steps_inner"><li>Выберите шаг игры:</li><li data-id="1">Выбор расы</li><li data-id="2">Выбор капитана</li>
+    <li data-id="3">Найм юнитов</li><li data-id="4">Расстановка юнитов</li><li data-id="5">Система боя</li></ul>
+    <div class="footer_inner"><a href="#" class="btn_op">НАЗАД</a></div></div><div class="stepper_content"></div></div></div></div></div>`,
+    `<div><div class="header_stepper_content"><div class="header_modal">Шаг - Выбор расы</div>
+    <p>1.Заполните поле, введя свой nickname. Если не введете он будет задан автоматически<br>
+    2.У каждой расы есть свои способности, обратите на это внимание при выборе<br>
+    3.Посмотреть все расы и ознакомиться с их способностями можно, нажимая на стрелки</p></div><div class="main_stepper_content">
+    <img src="./img/hint_race.png"></div></div>`, `<div><div class="header_stepper_content"><div class="header_modal">Шаг - Выбор капитана</div>
+    <p>1.Все доступные персонажи представлены иконками в правой части окна, текущий - подсвечен<br>
+    2.Кликая по иконке персонажа, можно ознакомиться с его характеристиками<br>
+    3.После выбора понравившегося персонажа - нажмите ОК для перехода к следующему шагу</p></div><div class="main_stepper_content">
+    <img src="./img/hint_captain.png"></div></div>`, `<div><div class="header_stepper_content"><div class="header_modal">Шаг - Найм юнитов</div>
+    <p>1.Просмотрите всех юнитов с помощью переключения стрелок<br>2.Ознакомтесь с описанием характеристик каждого юнита перед выбором<br>
+    3.Перетащите иконку понравившегося юнита в любой свободный слот, пока не заполните все слоты юнитами</p>
+    <p><ins>Подсказка</ins> - старайтесь выбрать юнитов с разными способностями, чтобы сделать команду более сбалансированной</p>
+    </div><div class="main_stepper_content"><img src="./img/hint_hire.png"></div></div>`, `<div><div class="header_stepper_content">
+    <div class="header_modal">Шаг - Расстановка юнитов</div><p>1.Перетащите юнитов ближнего боя в ячейки колонки ФРОНТ<br>
+    2. Для игрока 1 колонка ФРОНТ находится справа, для игрока 2 - слева<br>3. Юниты ближнего боя могут атаковать цель стоящую напротив или по диагонали<br>
+    Когда расставите всех игроков на поле,автоматически появится кнопка СОХРАНИТЬ расстановку</p></div><div class="main_stepper_content">
+    <img src="./img/hint_set.png"></div></div>`, `<div><div class="header_stepper_content"><div class="header_modal">Шаг - Система боя</div>
+    <p>1.Зеленым подсвечивается юнит у которого право хода, также подсвечена его иконка на боковой панели<br>
+    2.Наводите мышку на юнитов оппонента и если он будет подсвечиваться фиолетовым, значит он доступен для атаки<br>
+    3.Дополнительная панель кнопок: ЗАЩИТА - добавляет защиту +50 единиц от любого урона, ОЖИДАТЬ - переносит право хода юнита
+    в самый конец очереди, НИЧЬЯ - нажимайте, когда бой никогда не сможет завершиться</p></div><div class="main_stepper_content">
+    <img src="./img/hint_combat.png"></div></div>` ],
     raceWin: `<div class="race big_container"><div class="first_player"><div class="modal_pl1"></div><div class="name fpl">
     <div class="pl1 phrase">Игрок 1</div><input type="text" class="input_name plf" name="first_player" placeholder="Artur_1"></div>
     <div class="race_description plr1"><div class="map left"></div></div><div class="choose fplr"><a href="#" class="btn_op">ОК</a></div>
@@ -76,7 +103,8 @@ export const soundsMenu = {
     startBattle: './sounds/audio_menu/battle.mp3',
     combatDefend: './sounds/audio_menu/defend.mp3',
     combatWait: './sounds/audio_menu/wait.mp3',
-    nobodyWin: './sounds/audio_menu/final.mp3'
+    nobodyWin: './sounds/audio_menu/final.mp3',
+    battleMusic: './sounds/audio_menu/battlemusic.mp3'
 
 };
 

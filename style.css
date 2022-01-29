@@ -176,7 +176,110 @@ a:hover {
     border-radius: 5px;
 }
 
+/* Styles for Helper Window */
+
+.tutorial {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    width: 964px;
+    height: 669px;
+    background: url('./img/fone_stepper.jpeg') no-repeat 50% 50%;
+}
+
+.header_tutorial {
+    box-sizing: border-box;
+    height: 89px;
+}
+
+.stepper_tutorial {
+    box-sizing: border-box;
+    height: 580px;
+    display: flex;
+}
+
+.stepper_steps, .stepper_content {
+    box-sizing: border-box;
+    height: 580px;
+}
+
+.stepper_steps {
+    width: 204px;
+    padding-top: 10px;
+}
+
+.steps_inner, .footer_inner {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    height: 500px;
+}
+
+.steps_inner li {
+    margin: 5px auto;
+    padding: 10px;
+    width: 150px;
+    text-align: center;
+    border-radius: 15px;
+    color: rgb(235, 235, 94);
+    font-family: 'Kingthings Petrock';
+    font-size: 24px;
+    filter: drop-shadow(0 0 3px rgb(71, 31, 31));
+    background-image: linear-gradient(to right, rgb(54, 24, 24), rgb(71, 31, 31), rgb(90, 38, 38), rgb(71, 31, 31), rgb(54, 24, 24));
+}
+
+.steps_inner li:hover {
+    filter: drop-shadow(0 0 3px rgb(173, 171, 171));
+}
+
+.footer_inner {
+    height: 80px;
+}
+
+.footer_inner a {
+    margin: 0 auto;
+}
+
+.stepper_content {
+    width: 760px;
+}
+
+.stepper_content p {
+    margin-left: 5px;
+    color: black;
+    font-size: 16px;
+    font-weight: 500;
+    font-family: 'Lato';
+}
+
+.header_stepper_content {
+    height: auto;
+}
+
+.main_stepper_content {
+    position: relative;
+}
+
+.main_stepper_content img {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: auto;
+}
+
+.header_modal {
+    font-size: 22px;
+    font-weight: 500;
+    color: rgb(235, 235, 94);
+    text-align: center;
+    filter: drop-shadow(0 0 2px rgb(54, 24, 24));
+    font-family: 'Kingthings Petrock';
+    margin-top: 5px;
+}
+
 /* Styles for Race Window */
+
 .race {
     grid-template-columns: 3fr 4fr 3fr;
     grid-template-rows: 2fr 6fr 2fr;
@@ -684,66 +787,6 @@ a:hover {
     margin-top: 5px;
 }
 
-/* Styles for Modal Window */
-
-.modal_window{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    border: 1px solid grey;
-    width: 964px;
-    height: 669px;
-    background: url('./img/fone_modal.png') no-repeat 50% 50%;
-    position: relative;
-}
-
-.close_icon {
-    position: absolute;
-    right: 0;
-    top: 0;
-}
-
-.modal_header {
-    margin: 0 auto;
-    padding: 0;
-    box-sizing: border-box;
-    width: 964px;
-    height: 169px;
-}
-
-.modal_header p {
-    margin-left: 47px;
-    color: black;
-    font-size: 18px;
-}
-
-.header_modal {
-    font-size: 22px;
-    font-weight: 500;
-    color: rgb(235, 235, 94);
-    text-align: center;
-    filter: drop-shadow(0 0 2px rgb(54, 24, 24));
-    font-family: 'Kingthings Petrock';
-    margin-top: 10px;
-}
-
-.modal_main {
-    margin: 0 auto;
-    margin-top: -10px;
-    padding: 0;
-    box-sizing: border-box;
-    width: 964px;
-    height: 500px;
-    background: url('./img/Hint_hire.png') no-repeat 7px 0;
-    position: relative;
-}
-
-.button_close {
-    position: absolute;
-    bottom: 50px;
-    left: 407px; 
-}
-
 /* Styles for Hire Window */
 
 .hire_content {
@@ -954,57 +997,6 @@ a:hover {
     margin: auto;
     box-sizing: border-box;
     height: 50px;
-}
-
-/* Styles for Modal2 Window */
-
-.modal_header {
-    margin: 0 auto;
-    padding: 0;
-    box-sizing: border-box;
-    width: 964px;
-    height: 169px;
-}
-
-.modal_head p {
-    margin: 0 45px;
-    color: black;
-    font-size: 18px;
-    font-weight: 500;
-}
-
-.modal_head p:first-child {
-    margin-top: 5px;
-}
-
-.modal_main_set {
-    margin: 0 auto;
-    margin-top: 20px;
-    padding: 0;
-    box-sizing: border-box;
-    width: 964px;
-    height: 500px;
-    position: relative;
-    display: flex;
-}
-
-.first_hint_set, .second_hint_set {
-    margin: auto;
-    padding: 0;
-    box-sizing: border-box;
-    width: 482px;
-    height: 500px;
-    background: url('./img/Hint_set_1.png') no-repeat 50% 50%;
-}
-
-.second_hint_set {
-    background: url('./img/Hint_set_2.png') no-repeat 50% 50%;
-}
-
-.but_close {
-    position: absolute;
-    bottom: 0px;
-    left: 417px; 
 }
 
 /* Styles for SetUnit Window */
@@ -1356,7 +1348,6 @@ a:hover {
     font-family: 'Kingthings Petrock';
     margin-top: 20px;
 }
-
 
 .footer_result {
     height: 169px;
