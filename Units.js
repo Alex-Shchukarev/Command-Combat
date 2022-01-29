@@ -26,6 +26,7 @@ export class Unit {
         this.currentHealth = config[1];
         this.currentArmor = config[5];
         this.currentMagicalDefense = config[6];
+        this.doAction = false;
 
     }
 

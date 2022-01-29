@@ -71,12 +71,6 @@ export const contentArray = {
     <li>Магич. защита</li><li>Цели</li><li>Аттака</li></ul><ul class="value_characteristics"></ul></div>
     <div class="captain_info description_inform"><p></p></div></div><div class="captain_content captain_list"><ul></ul></div></div>
     <div class="captain footer"></div></div></div>`,
-    modalHire: `<div class="big_container"><div class="container"><div class="modal_window"><div class="modal_header">
-    <div class="header_modal">Модальное окно - Найм юнитов</div><p>1.Просмотрите всех юнитов с помощью переключения стрелок<br>
-    2.Ознакомтесь с описанием характеристик каждого юнита перед выбором<br>3.Перетащите иконку понравившегося юнита в любой свободный слот, пока не заполните все слоты юнитами</p>
-    <p>Подсказка - старайтесь выбрать юнитов с разными способностями, чтобы сделать команду более сбалансированной</p>
-    <img src="./img/close.png" class="close_icon"></div><div class="modal_main"><div class="button_close"><a href="#" class="btn_op">ЗАКРЫТЬ</a>
-    </div></div></div></div></div>`,
     hireWin: `<div class="big_container"><div class="container"><div class="hire_content header"><div class="hire_nameColumn">
     <div class="phrase">Найм юнитов</div></div><div class="hire_nameGame"><div class="name_game">Command Combat</div><div class="emblem">
     </div></div></div><div class="hire_content recruiting"><div class="slot_units"><div class="list_slots"><ul class="slots_for_icons">
@@ -84,13 +78,11 @@ export const contentArray = {
     <div class="icon_units"><div class="up_arrow"><img src="./img/arrow_up.png" alt="icon_arrow_up"></div><div class="icons_inner">
     <ul class="slides_icons"></ul></div><div class="down_arrow"><img src="./img/arrow_down.png" alt="icon_arrow_down"></div></div>
     <div class="info_units"><ul class="info_inner"></ul></div></div></div></div>`,
-    modalSetUnits: `<div class="big_container"><div class="container"><div class="modal_window"><div class="modal_head">
-    <div class="header_modal">Модальное окно - расстановка юнитов</div><p>1.Перетащите юнитов ближнего боя в ячейки колонки 2. ФРОНТ<br>
-    Для игрока 1 колонка ФРОНТ находится справа, для игрока 2 - слева<br>Когда расставите всех игроков на поле, автоматически появится 
-    кнопка СОХРАНИТЬ расстановку</p><p>Подсказка - юниты ближнего боя могут атаковать цель стоящую напротив или по диагонали 3.<br> 
-    Руководствуйтесь этим при расстановке.</p><img src="./img/close.png" class="close_icon"></div><div class="modal_main_set">
-    <div class="first_hint_set"></div><div class="second_hint_set"></div><div class="but_close"><a href="#" class="btn_op">ЗАКРЫТЬ</a>
-    </div></div></div></div></div>`,
+    combatPreload: `<div class="loading"><div class="header_result"><div class="name_game">Command Combat</div><div class="emblem">
+    </div></div><div class="winner_info"><div class="info_congratulation"><p>Да начнется битва и пусть победит сильнейший!</p></div>
+    </div><div class="footer_result"><ul class="menu_result"><li class="start_combat"><a href="#" class="btn_op">НАЧАТЬ БОЙ</a></li>
+    </ul></div></div>`,
+    
 }
 
 export const soundsMenu = {
@@ -216,7 +208,7 @@ const demonsListCaptain = [
     легионом демонов и веками ждет подходящего момента, когда сможет нанести смертельный удар.`,
     avatar: 'demons_duke.png',
     id: 0,
-    characteristics: [ '250', '50', '50', '0', '0', '0', '1', 'ближняя' ] },
+    characteristics: [ '230', '50', '50', '0', '0', '0', '1', 'ближняя' ] },
 
     { name: 'Графиня Адского Культа',
     portrait: 'ava_demons_countess.png',
@@ -298,7 +290,7 @@ localStorage.setItem( 'Deads', jsonconfig );
 
 // аватарки и характеристики для страниц - расстановка юнитов и сражение юнитов
 export const unitsList = [
-[ [ [ 'Капитан Королевской Кавалерии', 200, 50, 100, 0, 20, 0, 1, 'ближняя', 'empire_captain.png', '1' ],
+[ [ [ 'Капитан Королевской Кавалерии', 200, 50, 50, 0, 20, 0, 1, 'ближняя', 'empire_captain.png', '1' ],
     [ 'Архимаг Империи', 120, 40, 0, 25, 20, 0, 6, 'дальняя', 'empire_sorcerer.png', '2' ],
     [ 'Командир Королевских Рейнджеров', 150, 60, 40, 0, 20, 0, 1, 'дальняя', 'empire_rangers.png', '3' ] 
     ],
@@ -311,7 +303,7 @@ export const unitsList = [
     ]
 ],
 
-[ [ [ 'Герцог Легионов Ненависти', 250, 50, 50, 0, 0, 0, 1, 'ближняя', 'demons_dukes.png', '1' ],
+[ [ [ 'Герцог Легионов Ненависти', 230, 50, 50, 0, 0, 0, 1, 'ближняя', 'demons_dukes.png', '1' ],
         [ 'Графиня Адского Культа', 150, 40, 0, 25, 0, 0, 6, 'дальняя', 'demons_countes.png', '2' ],
         [ 'Повелитель Орд Гнева', 180, 60, 0, 40, 0, 0, 1, 'дальняя', 'demons_ranger.png', '3' ] 
     ],
@@ -752,10 +744,18 @@ export function buildSlotPlayer( slotPlayer, flag ) {
 
 }
 
-// сбрасываем броню до начального значения( для юнитов которые нажали кнопку защита, чтобы вернуть прежнее состояние )
+// сбрасываем броню и магич.защиту до начального значения( для юнитов которые нажали кнопку защита, чтобы вернуть прежнее состояние )
 export function setStartSettings( unitsSlot ) {
 
     unitsSlot.forEach( element => element.currentArmor = element.armor );
+    unitsSlot.forEach( element => element.currentMagicalDefense = element.magicalDefense );
+    
+}
+
+// сбрасываем активатор действия
+export function resetDoAction( unitsSlot ) {
+
+    unitsSlot.forEach( element => element.doAction = false );
     
 }
 
@@ -805,8 +805,49 @@ export function getNearOpponents( slotPlayer ) {
 
 }
 
-// проверяем валидность цели
-export function checkValidTarget( flag, slotOpponents, idTarget, slotAttackUnit ) {
+// проверяем доступна ли цель для атаки
+export function checkValidTarget( activeUnit, identificator, slotOpp, slotAct ) {
+
+    if( activeUnit.kind === 'Священник' && activeUnit.position[1] === identificator[1] ) { // для лечения своих юнитов священником
+        
+        return true;
+        
+    } else if( activeUnit.kind === 'Священник' && activeUnit.position[1] !== identificator[1] ) { // юниты не своей команды
+            
+        return false; 
+        
+    } else if( activeUnit.position[1] === identificator[1] ) { // юниты своей команды
+            
+        return false; 
+        
+    } else if( activeUnit.position[1] !== identificator[1] ) { // юниты не своей команды
+
+        if( activeUnit.distanse === 'дальняя' ) { // если у юнита дистанционная атака
+
+            return true;
+            
+        } else if( activeUnit.distanse === 'ближняя' ) {
+
+            let slotOpponents = getNearOpponents( slotOpp );
+            let slotActiveUnit = getNearOpponents( slotAct );
+            if( checkValidCloseTarget( activeUnit.position, slotOpponents, identificator, slotActiveUnit ) ) {
+            
+                return true;
+                
+            } else { 
+                
+                return false; 
+            
+            }
+                
+        }
+    
+    }
+    
+}
+
+// проверяем валидность цели для юнитов ближнего боя
+export function checkValidCloseTarget( flag, slotOpponents, idTarget, slotAttackUnit ) {
 
     let isValid = false;
     let attSlot = slotAttackUnit.filter( soldier => soldier !== 'transfer' );

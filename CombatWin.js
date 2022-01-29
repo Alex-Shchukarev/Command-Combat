@@ -2,9 +2,9 @@
 
 import { FinalWindow } from './FinalWin.js';
 import { ResultWindow } from './ResultWin.js';
-import { unitsList, combatModels, soundsMenu, soundsUnits, contentArray } from './lib.js';
-import { createElem, fortune, getConfigArray, getConfigs, styleImage, buildSlotPlayer, setStartSettings } from './lib.js';
-import { queueUnits, slotUnitsEmpty, clearSlotAllUnits, getNearOpponents, checkValidTarget, styleImageAll } from './lib.js';
+import { unitsList, combatModels, soundsMenu, soundsUnits, contentArray, checkValidTarget } from './lib.js';
+import { createElem, fortune, getConfigArray, getConfigs, styleImage, buildSlotPlayer, setStartSettings, resetDoAction } from './lib.js';
+import { queueUnits, slotUnitsEmpty, clearSlotAllUnits, getNearOpponents, checkValidCloseTarget, styleImageAll } from './lib.js';
 
 export default class CombatWin {
 
@@ -156,18 +156,7 @@ export default class CombatWin {
       // загружаем заставку перед началом боя
       this.modalWindow = this._elem.querySelector( '.modal' );
       this.modalWindow.classList.add( 'loading' );
-      const preloaderFight = createElem( `<div class="loading">
-      <div class="header_result">
-        <div class="name_game">Command Combat</div><div class="emblem"></div>
-      </div>
-      <div class="winner_info">
-        <div class="info_congratulation"><p>Да начнется битва и пусть победит сильнейший!</p></div>
-      </div>
-      <div class="footer_result">
-        <ul class="menu_result">
-          <li class="start_combat"><a href="#" class="btn_op">НАЧАТЬ БОЙ</a></li></ul>
-      </div>
-    </div>` );
+      const preloaderFight = createElem( `${contentArray.combatPreload}` );
       this.modalWindow.append( preloaderFight );
       const buttonFight = this.modalWindow.querySelector( '.start_combat' );
       buttonFight.addEventListener( 'click', this.startFight );
@@ -185,6 +174,8 @@ export default class CombatWin {
       this.fieldMain.addEventListener( 'pointerover', this.overTarget );
       this.fieldMain.addEventListener( 'pointerout', this.leaveTarget );
       this.currentTarget = null;
+
+      // добавляем музыку и звуки
       this.menuSound = new Audio();
       this.menuSound.autoplay = true;
       this.soundOneUnitAttack = new Audio();
@@ -225,6 +216,7 @@ export default class CombatWin {
         let unit = this._elem.querySelector( '.active_unit' );
         let flag = unit.closest( 'li' ).dataset.id;
         this.slotAllUnits.forEach( item => { if( item.position === flag ) item.defend(); } );
+        this.activeUnit.doAction = true;
         this.actionDone = true;
 
       } else if( target.closest( '.button_wait' ) ) { // если нажата кнопка ожидания
@@ -246,7 +238,7 @@ export default class CombatWin {
           this.slotAllUnits.push( ...removeElem );
 
         }
-        
+        this.activeUnit.doAction = true;
         this.actionDone = true;
 
       } else if( target.closest( '.button_nobody' ) ) { // если нажата кнопка ничья
@@ -280,39 +272,25 @@ export default class CombatWin {
 
     overTarget = ( event ) => {
 
+      event.preventDefault(); // отменяем действие браузера по умолчанию
+      if( this.currentTarget ) return; // проверяем мы на целью или нет
+      if( this.activeUnit.doAction ) return; // проверяем этот юнит уже атаковал или еще нет
       let target = event.target;
+      if( !target.closest( '[data-id]' ) ) return; // если мы не над потенциальным целевым элементом
       let identificator = target.closest( '[data-id]' ).dataset.id;
-      // если активный юнит священник, то должен лечить только юнитов своей команды
-      if( this.activeUnit.kind === 'Священник' && this.activeUnit.position[1] === identificator[1] ) { 
-        // добавляем подстветку юниту - потенциальной цели и его иконке
-        this.getTarget( target, identificator ); // передаем управление дальше
-        
-      } else if( this.activeUnit.kind === 'Священник' && this.activeUnit.position[1] !== identificator[1] ) { // юниты не своей команды
-            
-        return; 
-        
-      } else if( this.activeUnit.position[1] === identificator[1] ) { // юниты своей команды
-            
-        return; 
-        
-      } else if( this.activeUnit.position[1] !== identificator[1] ) { // юниты не своей команды
+      // получаем группу противника и свою дл проверки валидности цели
+      let slotOpponents = this.chooseSlot( identificator );
+      let slotActiveUnit = this.chooseSlot( this.activeUnit.position );
+      let result = checkValidTarget( this.activeUnit, identificator, slotOpponents, slotActiveUnit );
+      if( result ) {
 
-        if( this.activeUnit.distanse === 'дальняя' ) { // если у юнита дистанционная атака
-                
-          this.getTarget( target, identificator );
-            
-        } else if( this.activeUnit.distanse === 'ближняя' ) {
+        this.currentTarget = target;
+        this.getTarget( target, identificator );
 
-          let slotOpponents = getNearOpponents( this.chooseSlot( identificator ) );
-          let slotActiveUnit = getNearOpponents( this.chooseSlot( this.activeUnit.position ) );
-          if( checkValidTarget( this.activeUnit.position, slotOpponents, identificator, slotActiveUnit ) ) {
-            
-            this.getTarget( target, identificator );
-                
-          } else { return; }
-                
-        }
-    
+      } else {
+
+        return;
+
       }
 
     }
@@ -320,22 +298,40 @@ export default class CombatWin {
     catchTarget = ( event ) => {
 
       event.preventDefault(); // отменяем действие браузера по умолчанию
-
+    
       let target = event.target;
       let ident = target.closest( '[data-id]' ); // находим элемент у которого есть id
       let opponent = [];
       let identificator = ident.dataset.id; // получаем идентификатов юнита по которому кликнули
+      if( this.activeUnit.position[1] === identificator[1] && !this.activeUnit.kind === 'Священник' ) return;
+      if( this.activeUnit.doAction ) return;
+      let slotOpponents = this.chooseSlot( identificator ); // получаем слот всех юнитов опонента
+      let slotActiveUnit = this.chooseSlot( this.activeUnit.position );
+      let result = checkValidTarget( this.activeUnit, identificator, slotOpponents, slotActiveUnit );
+      if( result ) {
 
-      let slotOpponents = this.chooseSlot( identificator ); // получаем слот всех юнитов опонента 
+        this.currentTarget = target;
+        this.getTarget( target, identificator );
+
+      } else {
+
+        return;
+        
+      }
+
+      this.activeUnit.doAction = true;
+      //let slotOpponents = this.chooseSlot( identificator ); // получаем слот всех юнитов опонента 
       let unitTarget = slotOpponents.find( item => item.position === identificator ); // получаем юнита по которому кликнули
       opponent.push( unitTarget );
 
       if( this.activeUnit.targets === 1 ) { // для атакующих юнитов у которых кол-во целей 1
         
+        this.mustLeaveTarget();
         this.attack( opponent );
         
       } else if( this.activeUnit.targets === 6 ) { // для атакующих юнитов сразу по всем юнитам опонента
-            
+        
+        this.mustLeaveTarget();
         this.attackAll( slotOpponents, identificator );
         
       }
@@ -345,9 +341,27 @@ export default class CombatWin {
     // покидаем потенциальную цель
     leaveTarget = ( event ) => {
 
+      if( !this.currentTarget ) return; // мы над целью или нет
+      let relatedTarget = event.relatedTarget; // покинутая цель
+      while( relatedTarget ) { // если покинутая цель это все таже цель - родитель, то значим мы ее не покидали, а если нет то выходим из цикла
+        if( relatedTarget == this.currentTarget ) return;
+        relatedTarget = relatedTarget.parentNode;
+      }
+
       this.activeTarget.removeEventListener( 'click', this.catchTarget );
       this._elem.querySelector( '.icon_target' ).classList.remove( 'icon_target' );
       this.activeTarget.classList.remove( 'active_target' );
+      this.currentTarget = null;
+
+    }
+
+    // покидаем потенциальную цель принудительно
+    mustLeaveTarget = () => {
+
+      this.activeTarget.removeEventListener( 'click', this.catchTarget );
+      this._elem.querySelector( '.icon_target' ).classList.remove( 'icon_target' );
+      this.activeTarget.classList.remove( 'active_target' );
+      this.currentTarget = null;
 
     }
 
@@ -408,6 +422,7 @@ export default class CombatWin {
       leaveFight: while( !slotUnitsEmpty( this.slotPlayer1 ) && !slotUnitsEmpty( this.slotPlayer2 ) ) { // проверка не пусты ли слоты
             
         setStartSettings( this.slotAllUnits ); // устанавливаем броню в стартовые значения
+        resetDoAction( this.slotAllUnits ); // сбрасываем активаторы действий
         queueUnits( this.slotAllUnits ); // очередь приоритета ходов юнитов
         for( let unit of this.slotAllUnits ) {
           if( unit === 'transfer' ) continue; // проверка юнит это или нет
@@ -427,9 +442,6 @@ export default class CombatWin {
           elemUnit.classList.remove( 'active_unit' );
           iconUnit.classList.remove( 'icon_active' );
           await new Promise( ( resolve ) => setTimeout( resolve, 500 ) );
-          // удаляем подсветку уюнита и его иконки
-          //elemUnit.classList.remove( 'active_unit' );
-          //iconUnit.classList.remove( 'icon_active' );
                 
           // проверяем слоты юнитов, если какой-то пуст завершаем битву и выводим окно с победителем
           if( slotUnitsEmpty( this.slotPlayer1 ) ) { const id = 2; this.createConfigWinner( id ); break leaveFight; }
