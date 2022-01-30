@@ -82,7 +82,15 @@ export const contentArray = {
     </div></div><div class="winner_info"><div class="info_congratulation"><p>Да начнется битва и пусть победит сильнейший!</p></div>
     </div><div class="footer_result"><ul class="menu_result"><li class="start_combat"><a href="#" class="btn_op">НАЧАТЬ БОЙ</a></li>
     </ul></div></div>`,
-    
+    finalNobody: `<div class="big_container"><div class="container"><div class="finish_window"><div class="name_game">Command Combat</div>
+    <div class="emblem"></div><ul class="menu_final"><li class="start_newgame"><a href="#" class="btn_op">НОВАЯ ИГРА</a></li>
+    <li class="exit_game"><a href="#" class="btn_op">ВЫХОД</a></li></ul></div></div></div>`,
+    resultWin: `<div class="big_container"><div class="container"><div class="result_win"><div class="header_result">
+    <div class="name_game">Command Combat</div><div class="emblem"></div></div><div class="winner_info"><div class="info_player"></div>
+    <div class="info_nickname"></div><div class="info_race"></div><div class="info_congratulation">
+    <p>Вы достойно сражались и ваша команда бойцов отлично подготовлена.<br><br>Вы достойны победы, поздравляем!</p></div></div>
+    <div class="footer_result"><ul class="menu_result"><li class="start_newgame"><a href="#" class="btn_op">НОВАЯ ИГРА</a></li>
+    <li class="exit_game"><a href="#" class="btn_op">ВЫХОД</a></li></ul></div></div></div></div>`,
 }
 
 export const soundsMenu = {
@@ -322,7 +330,7 @@ export const unitsList = [
     ],
 
     [ [ 'Кентавр', 170, 50, 35, 0, 20, 0, 1, 'ближняя', 'elfs_centaur.png', '4' ],
-    [ 'Рейнджер', 100, 65, 15, 0, 0, 0, 1, 'дальняя', 'elfs_archer.png', '5' ],
+    [ 'Рейнджер', 100, 65, 40, 0, 0, 0, 1, 'дальняя', 'elfs_archer.png', '5' ],
     [ 'Лорд Лесов', 90, 50, 15, 0, 0, 0, 6, 'дальняя', 'elfs_overlord.png', '6' ],
     [ 'Часовой', 120, 65, 0, 30, 0, 0, 1, 'дальняя', 'elfs_guard.png', '7' ],
     [ 'Маг', 90, 50, 0, 15, 0, 100, 6, 'дальняя', 'elfs_mag.png', '8' ] 
@@ -631,8 +639,8 @@ export const listUnits = [
     id: 0 },
     { name: 'Рейнджер',
     portrait: 'elfs_archer.png',
-    startlist: '<p><br>Здоровье - 100<br>Инициатива - 65<br>Урон - 15<br>Броня - 0<br>Цели - 1</p>',
-    endlist: '<p><br>Маг.урон - 0<br>Маг.защита - 0<br>Аттака - дальняя<br>Способности - двойная атака</p>',
+    startlist: '<p><br>Здоровье - 100<br>Инициатива - 65<br>Урон - 40<br>Броня - 0<br>Цели - 1</p>',
+    endlist: '<p><br>Маг.урон - 0<br>Маг.защита - 0<br>Аттака - дальняя<br>Способности - усиленная атака</p>',
     id: 1 },
     { name: 'Лорд лесов',
     portrait: 'elfs_overlord.png',

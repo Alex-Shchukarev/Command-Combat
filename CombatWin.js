@@ -2,9 +2,9 @@
 
 import { FinalWindow } from './FinalWin.js';
 import { ResultWindow } from './ResultWin.js';
-import { unitsList, combatModels, soundsMenu, soundsUnits, contentArray, checkValidTarget } from './lib.js';
+import { unitsList, combatModels, soundsMenu, soundsUnits, contentArray } from './lib.js';
 import { createElem, fortune, getConfigArray, getConfigs, styleImage, buildSlotPlayer, setStartSettings, resetDoAction } from './lib.js';
-import { queueUnits, slotUnitsEmpty, clearSlotAllUnits, getNearOpponents, checkValidCloseTarget, styleImageAll } from './lib.js';
+import { queueUnits, slotUnitsEmpty, clearSlotAllUnits, styleImageAll, checkValidTarget } from './lib.js';
 
 export default class CombatWin {
 
@@ -101,6 +101,7 @@ export default class CombatWin {
         // вставляем аватарку и здоровье в боковую панель 
         this.listPlayer1.querySelector( `.i_${item[11]}`).setAttribute( 'src', `./img/${item[9]}` );
         this.listPlayer1.querySelector( `.ih_${item[11]}`).innerHTML = item[1];
+        this.listPlayer1.querySelector( `.i_${item[11]}`).classList.add( 'info_unit' );
         let elem = this.combatModels[this.configFirstPlayer.race]; // получаем массив моделей расы 1го игрока
         let soundsUnits = this.soundsUnits[this.idRacePlayer1]; // получаем массив звуков моделей юнитов 1го игрока
         let animationDate = elem[ Number( item[10] ) ].left; // выбираем вариант расположения слева так как игрок_1
@@ -128,6 +129,7 @@ export default class CombatWin {
 
         this.listPlayer2.querySelector( `.i_${item[11]}`).setAttribute( 'src', `./img/${item[9]}` );
         this.listPlayer2.querySelector( `.ih_${item[11]}`).innerHTML = item[1];
+        this.listPlayer2.querySelector( `.i_${item[11]}`).classList.add( 'info_unit' );
         let elem = this.combatModels[this.configSecondPlayer.race];
         let soundsUnits = this.soundsUnits[this.idRacePlayer2];
         let animationDate = elem[ Number( item[10] ) ].right;
@@ -185,6 +187,10 @@ export default class CombatWin {
       this.soundsBattle.loop = true;
       this.soundsBattle.autoplay = true;
 
+      // вешаем обработчик на боковые панели для вывода информации о юнитах
+      this.listPlayer1.addEventListener( 'contextmenu', this.infoUnit );
+      this.listPlayer2.addEventListener( 'contextmenu', this.infoUnit );
+
     }
 
     // получаем фон для поля битвы
@@ -238,7 +244,6 @@ export default class CombatWin {
           this.slotAllUnits.push( ...removeElem );
 
         }
-        this.activeUnit.doAction = true;
         this.actionDone = true;
 
       } else if( target.closest( '.button_nobody' ) ) { // если нажата кнопка ничья
@@ -249,6 +254,26 @@ export default class CombatWin {
         const finwin = new FinalWindow();
 
       } else return;
+
+    }
+
+    infoUnit = ( event ) => {
+
+      event.preventDefault();
+      let target = event.target;
+      if( !target.closest( '.info_unit' ) ) return;
+      let unitForInfo = this.slotAllUnits.find( item => target.classList.contains( `i_${item.position}` ) );
+      const tooltip = document.createElement( 'div' );
+      tooltip.className = 'tooltips';
+      tooltip.innerHTML = `Броня:${unitForInfo.currentArmor} Маг.Защита:${unitForInfo.currentMagicalDefense}
+      Урон:${unitForInfo.damage} Маг.Урон:${unitForInfo.magicalDamage} Инициатива:${unitForInfo.iniciative}
+      Атака:${unitForInfo.distanse} Целей:${unitForInfo.targets}`;                     
+
+      tooltip.style.left = target.getBoundingClientRect().left + 75 + 'px';
+      tooltip.style.top = target.getBoundingClientRect().top + 10 + 'px';
+      document.body.append( tooltip );
+
+      setTimeout( () => tooltip.remove(), 3500 );
 
     }
 
@@ -308,12 +333,7 @@ export default class CombatWin {
       let slotOpponents = this.chooseSlot( identificator ); // получаем слот всех юнитов опонента
       let slotActiveUnit = this.chooseSlot( this.activeUnit.position );
       let result = checkValidTarget( this.activeUnit, identificator, slotOpponents, slotActiveUnit );
-      if( result ) {
-
-        this.currentTarget = target;
-        this.getTarget( target, identificator );
-
-      } else {
+      if( !result ) {
 
         return;
         

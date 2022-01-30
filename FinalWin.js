@@ -1,23 +1,13 @@
 "use strict";
 
-import { createElem, soundsMenu } from "./lib.js";
+import { contentArray, createElem, soundsMenu } from "./lib.js";
 import StartWindow from "./StartWin.js";
 
 export class FinalWindow {
 
     constructor() {
 
-        let elem = createElem( `<div class="big_container">
-        <div class="container">
-          <div class="finish_window">
-            <div class="name_game">Command Combat</div><div class="emblem"></div>
-            <ul class="menu_final">
-              <li class="start_newgame"><a href="#" class="btn_op">НОВАЯ ИГРА</a></li>
-              <li class="exit_game"><a href="#" class="btn_op">ВЫХОД</a></li></ul>
-          </div>
-          
-          </div>
-        </div>` );
+        let elem = createElem( `${contentArray.finalNobody}` );
 
         // добавляем верстку в главный контейнер
         this.mainContainer = document.querySelector( '.main_container' );

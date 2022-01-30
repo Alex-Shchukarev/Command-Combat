@@ -1302,6 +1302,20 @@ a:hover {
     filter: drop-shadow(0 0 5px magenta);
 }
 
+.tooltips {
+    position: fixed;
+    z-index: 100;
+    width: 100px;
+    padding: 10px 20px;
+    border: 1px solid #b3c9ce;
+    border-radius: 4px;
+    text-align: center;
+    font: italic 14px sans-serif;
+    color: rgb(71, 31, 31);
+    background: #fff;
+    box-shadow: 3px 3px 3px rgba(0, 0, 0, .3);
+}
+
 /* Styles for Final Window */
 
 .finish_window {
