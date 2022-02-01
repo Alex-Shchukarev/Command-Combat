@@ -19,7 +19,8 @@ export const contentArray = {
     Это может быть доблестная Империя, благородные Эльфы, жестокие Демоны или восставшие Мертвецы, выбирайте и сражайтесь!</p></div>
     <ul class="menu"><li class="start"><a href="#" class="btn_op">НАЧАТЬ ИГРУ</a></li><li class="help">
     <a href="#" class="btn_op">КАК ИГРАТЬ</a></li><li class="exit"><a href="#" class="btn_op">ВЫХОД</a></li></ul><div class="useful_link">
-    <div class="git"><a href="https://github.com/Alex-Shchukarev/Command-Combat"></a></div><p>v. 1.3</p><p>Shukarev A.A.</p></div></div>`,
+    <div class="git"><a href="https://github.com/Alex-Shchukarev/Command-Combat" target="_blank"><img src="./img/git_img.jpg"></a></div>
+    <p>v. 1.3</p><p>Shukarev A.A.</p></div></div>`,
     helper: [ `<div class="big_container"><div class="container"><div class="tutorial"><div class="header_tutorial">
     <div class="name_game">Command Combat</div><div class="emblem"></div></div><div class="stepper_tutorial"><div class="stepper_steps">
     <ul class="steps_inner"><li>Выберите шаг игры:</li><li data-id="1">Выбор расы</li><li data-id="2">Выбор капитана</li>
@@ -864,9 +865,7 @@ export function checkValidCloseTarget( flag, slotOpponents, idTarget, slotAttack
     let lengthSlotOp = oppSlot.length;
     let isFrontAtt = slotAttackUnit.filter( soldier => ( soldier !== 'transfer' && soldier.position[0] === 'f' ) );
     let isFrontOpp = slotOpponents.filter( soldier => ( soldier !== 'transfer' && soldier.position[0] === 'f' ) );
-
-    //if( flag[0] !== idTarget[0] && isFrontAtt.length !== 0 ) { 
-        //return isValid; 
+ 
     if( flag[0] === idTarget[0] && isFrontAtt.length !== 0 && isFrontOpp.length === 0 ) { 
         return isValid; 
     } else if( flag[0] === idTarget[0] && isFrontAtt.length === 0 && isFrontOpp.length !== 0 ) { 
