@@ -1,6 +1,6 @@
 # Command-Combat
 
-Project of combat game (TBS format).
+Project of combat game (TBS format).[deploy](https://alex-shchukarev.github.io/Command-Combat/)
 There are 4 races and more than 30 types of units available in the game. Each unit has its own characteristics. Dedicated to all lovers of strategies.
 
 To run:
